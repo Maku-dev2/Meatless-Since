@@ -1,0 +1,1682 @@
+<title>Meatless Since</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EEF1EC; --surface:#FAFBF8; --surface-2:#E4E9E1; --surface-3:#D7DED3;
+  --panel:#16241C; --panel-ink:#DCE8DF; --panel-dim:#6E8478; --glow:#7FD3A3;
+  --ink:#16211A; --ink-2:#4A5A50; --ink-3:#78877D;
+  --line:#D3DACF; --line-2:#C2CBBD;
+  --accent:#2E7D53; --accent-soft:#DCEBE0; --accent-ink:#1D5138;
+  --danger:#9C4A38;
+  --shadow:0 1px 2px rgba(22,36,28,.06), 0 8px 24px -12px rgba(22,36,28,.18);
+  --display:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
+  --body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:14px; --r-s:9px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101512; --surface:#171E19; --surface-2:#1F2822; --surface-3:#2A342D;
+    --panel:#0A100C; --panel-ink:#CFE3D5; --panel-dim:#5E7268; --glow:#86E0AC;
+    --ink:#E6EDE7; --ink-2:#A3B2A8; --ink-3:#7A897F;
+    --line:#2A342D; --line-2:#39453C;
+    --accent:#6BC48D; --accent-soft:#1E3227; --accent-ink:#A8DEBF;
+    --danger:#D08672;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101512; --surface:#171E19; --surface-2:#1F2822; --surface-3:#2A342D;
+  --panel:#0A100C; --panel-ink:#CFE3D5; --panel-dim:#5E7268; --glow:#86E0AC;
+  --ink:#E6EDE7; --ink-2:#A3B2A8; --ink-3:#7A897F;
+  --line:#2A342D; --line-2:#39453C;
+  --accent:#6BC48D; --accent-soft:#1E3227; --accent-ink:#A8DEBF;
+  --danger:#D08672;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+.wrap{max-width:560px;margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom))}
+@media(min-width:920px){
+  .wrap{max-width:1010px}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,382px);gap:28px;align-items:start}
+}
+.topbar{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1010px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;
+  font-variation-settings:"opsz" 14;white-space:nowrap}
+.brand span{color:var(--ink-3);font-weight:500}
+.tabs{margin-left:auto;display:flex;gap:2px;background:var(--surface-2);padding:3px;border-radius:99px;
+  overflow-x:auto;scrollbar-width:none;max-width:100%}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:500;color:var(--ink-2);
+  white-space:nowrap;transition:background .15s,color .15s}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+@media(max-width:760px){.tabs button{padding:6px 10px;font-size:12.5px}.brand span{display:none}}
+@media(max-width:460px){.brand{display:none}.tabs{margin-left:0}}
+
+.demo{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;padding:11px 14px;
+  border:1px dashed var(--line-2);border-radius:var(--r);background:var(--surface);color:var(--ink-2);font-size:13.5px}
+.demo b{color:var(--ink);font-weight:600}
+.demo button{margin-left:auto;background:var(--ink);color:var(--bg);padding:7px 15px;border-radius:99px;
+  font-size:13px;font-weight:600;white-space:nowrap}
+
+.readout{margin-top:14px;background:var(--panel);border-radius:var(--r);padding:22px 20px 17px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.readout::after{content:"";position:absolute;inset:0;border-radius:var(--r);pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 40px rgba(0,0,0,.35)}
+.readout .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--panel-dim);margin-bottom:13px}
+.clock{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;font-family:var(--mono);
+  font-variant-numeric:tabular-nums;color:var(--glow)}
+.clock .big{font-size:clamp(40px,12.5vw,58px);font-weight:600;line-height:.95;letter-spacing:-.03em;
+  text-shadow:0 0 22px color-mix(in srgb,var(--glow) 35%,transparent)}
+.clock .big small{font-size:.34em;font-weight:500;letter-spacing:0;margin-left:5px;color:var(--panel-dim);
+  text-shadow:none}
+.clock .hms{font-size:15px;color:var(--panel-ink);opacity:.72}
+.readout-foot{margin-top:15px;padding-top:12px;border-top:1px solid rgba(255,255,255,.09);
+  display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--panel-dim)}
+.readout-foot b{color:var(--panel-ink);font-family:var(--mono);font-weight:500}
+
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+@media(max-width:410px){.tiles{grid-template-columns:1fr}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 15px 13px;
+  display:flex;flex-direction:column;gap:2px;min-height:126px;position:relative}
+.tile .k{font-size:12px;font-weight:500;color:var(--ink-2);padding-right:24px;line-height:1.35}
+.tile .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:25px;font-weight:600;
+  letter-spacing:-.035em;line-height:1.2;margin-top:4px}
+.tile .v em{font-style:normal;font-size:.5em;color:var(--ink-3);font-weight:500;margin-left:4px;letter-spacing:0}
+.tile .eq{margin-top:auto;padding-top:8px;font-size:12px;color:var(--ink-2);line-height:1.4}
+.tile.lead{grid-column:1/-1;background:linear-gradient(175deg,var(--surface),var(--surface-2))}
+.tile.lead .v{font-size:36px}
+.bd{margin-top:9px;display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));
+  gap:0 18px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.bd div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dotted var(--line-2)}
+.bd b{color:var(--ink-2);font-weight:500;font-variant-numeric:tabular-nums}
+.why{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:99px;border:1px solid var(--line-2);
+  color:var(--ink-3);font-family:var(--mono);font-size:11px;line-height:1;display:grid;place-items:center;
+  transition:background .15s,color .15s,border-color .15s}
+.why:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+.strip{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px}
+.strip-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.strip-h h3{font-size:15.5px;font-variation-settings:"opsz" 16}
+.strip-h .n{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-2)}
+.dots{display:grid;grid-template-columns:repeat(15,1fr);gap:5px;margin-top:12px}
+.dot{aspect-ratio:1;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);padding:0;
+  min-width:0;transition:transform .1s}
+.dot:hover{transform:scale(1.16)}
+.dot[data-t="veg"]{background:var(--accent);border-color:var(--accent)}
+.dot[data-t="fish"]{background:var(--accent-soft);border-color:var(--accent)}
+.dot[data-t="meat"]{background:var(--ink-3);border-color:var(--ink-3)}
+.dot[data-t="unknown"]{background:var(--surface-3);border-color:var(--line-2)}
+.dot[data-today="1"]{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:11.5px;color:var(--ink-3);
+  font-family:var(--mono)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2.5px;margin-right:5px;vertical-align:0}
+
+.back{margin-top:10px;padding:15px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent-ink)}
+.back h3{font-size:16px;font-variation-settings:"opsz" 16;margin-bottom:6px}
+.back p{font-size:13.5px;line-height:1.5}
+.back .row{margin-top:12px}
+
+.next{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px}
+.next .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.next h3{font-size:16px;margin:7px 0 4px;font-variation-settings:"opsz" 16}
+.next p{font-size:13.5px;color:var(--ink-2)}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .6s ease}
+.bar-foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px;
+  color:var(--ink-3);margin-top:6px;gap:12px}
+.nudge{margin-top:10px;padding:14px 16px;border-radius:var(--r);background:var(--surface-2);
+  font-size:14px;line-height:1.45;display:flex;gap:12px;align-items:flex-start;color:var(--ink-2)}
+.nudge .mark{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);flex-shrink:0;padding-top:3px}
+
+.rail{margin-top:12px;position:relative;padding-left:30px}
+.rail::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line);border-radius:2px}
+.ms{position:relative;padding-bottom:22px}
+.ms::before{content:"";position:absolute;left:-26px;top:5px;width:12px;height:12px;border-radius:99px;
+  background:var(--bg);border:2px solid var(--line-2)}
+.ms.done::before{background:var(--accent);border-color:var(--accent)}
+.ms.now::before{background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.ms .when{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.ms h4{margin:3px 0;font-size:15.5px;font-variation-settings:"opsz" 16}
+.ms p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.ms:not(.done) h4{color:var(--ink-2)}
+.ms:not(.done) p{color:var(--ink-3)}
+.src{margin-top:6px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.45}
+.cat{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 7px;border-radius:99px;border:1px solid var(--line-2);color:var(--ink-3);margin-left:7px;vertical-align:2px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:10px}
+.card h3{font-size:16px;font-variation-settings:"opsz" 16;margin-bottom:6px}
+.card p{font-size:14px;color:var(--ink-2);line-height:1.55}
+.card.honest{background:var(--surface-2);border-color:var(--line-2);border-left:3px solid var(--ink-3)}
+.card .tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);display:block;margin-bottom:7px}
+.sec-h{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);
+  margin:26px 0 2px;display:flex;align-items:center;gap:10px}
+.sec-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-p{font-size:13.5px;color:var(--ink-3);margin-top:8px;line-height:1.5}
+.lede{font-size:14.5px;color:var(--ink-2);line-height:1.55;margin-top:10px}
+
+.field{margin-top:16px}
+.field>label{display:block;font-size:13.5px;font-weight:600;margin-bottom:3px}
+.hint{font-size:12.5px;color:var(--ink-3);line-height:1.45;margin-bottom:8px}
+input[type=date],input[type=number],input[type=text],select,textarea{width:100%;padding:10px 12px;
+  border-radius:var(--r-s);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
+  font:inherit;font-size:15px}
+textarea{font-family:var(--mono);font-size:11.5px;min-height:130px;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:9px 14px;border-radius:99px;border:1px solid var(--line-2);background:var(--surface);
+  font-size:13.5px;font-weight:500;color:var(--ink-2);transition:.15s;text-align:left;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip small{display:block;font-size:11.5px;font-weight:400;opacity:.72;margin-top:1px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.slider-row{display:grid;grid-template-columns:88px 1fr 84px;gap:11px;align-items:center;margin-top:10px}
+.slider-row .nm{font-size:13.5px}
+.slider-row .amt{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);text-align:right;
+  font-variant-numeric:tabular-nums}
+.mix-row{margin-top:13px}
+.mix-row .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-size:13.5px;margin-bottom:2px}
+.mix-row .top .off{color:var(--ink-3)}
+.mix-row .top b{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:99px;
+  font-weight:600;font-size:14.5px;background:var(--ink);color:var(--bg);transition:opacity .15s;min-height:44px}
+.btn:hover{opacity:.88}
+.btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line-2)}
+.btn.wide{width:100%}
+.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,var(--bg) 62%,transparent);pointer-events:none}
+.dock-in{max-width:560px;margin:0 auto;pointer-events:auto}
+@media(min-width:920px){.dock-in{max-width:1010px}}
+
+.scrim{position:fixed;inset:0;background:rgba(10,16,12,.5);z-index:60;display:grid;place-items:end center;
+  animation:fade .2s ease}
+@keyframes fade{from{opacity:0}}
+.sheet{background:var(--bg);width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:20px 18px
+  calc(30px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;animation:up .26s cubic-bezier(.2,.8,.3,1)}
+@keyframes up{from{transform:translateY(22px)}}
+@media(min-width:640px){.scrim{place-items:center}.sheet{border-radius:18px;max-height:84vh;padding-bottom:26px}}
+.sheet-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.sheet-h h3{font-size:19px;font-variation-settings:"opsz" 20;flex:1}
+.x{width:32px;height:32px;border-radius:99px;background:var(--surface-2);color:var(--ink-2);flex-shrink:0;
+  display:grid;place-items:center;font-size:15px;line-height:1}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13.5px;margin-top:14px}
+.kv dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);
+  padding-top:3px}
+.kv dd{margin:0;color:var(--ink-2);line-height:1.5}
+.formula{font-family:var(--mono);font-size:12px;background:var(--surface-2);padding:11px 12px;
+  border-radius:var(--r-s);margin-top:12px;overflow-x:auto;white-space:pre;color:var(--ink-2)}
+.steps{display:flex;gap:5px;margin-bottom:18px}
+.steps i{height:3px;flex:1;background:var(--line);border-radius:2px}
+.steps i.on{background:var(--accent)}
+.ob-h{font-family:var(--display);font-size:22px;font-weight:700;font-variation-settings:"opsz" 24;
+  letter-spacing:-.02em;margin-bottom:5px}
+.ob-p{font-size:14px;color:var(--ink-2);line-height:1.55}
+.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.log-grid .chip{justify-content:flex-start;display:flex;align-items:center;min-height:64px}
+.log-grid .chip:last-child{grid-column:1/-1}
+.entry{display:flex;gap:10px;align-items:baseline;font-size:13.5px;padding:9px 0;border-bottom:1px solid var(--line)}
+.entry .d{font-family:var(--mono);font-size:12px;color:var(--ink-3);flex-shrink:0;width:104px}
+.entry .g{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-3)}
+.price-row{display:grid;grid-template-columns:1fr 118px;gap:12px;align-items:center;
+  padding:6px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.price-row .own small{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);margin-left:5px}
+.pin{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:12.5px;color:var(--ink-3)}
+.pin input{width:100%;padding:7px 9px;font-size:14px;text-align:right;font-family:var(--mono);
+  font-variant-numeric:tabular-nums}
+.sub-head{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:18px 0 4px}
+.sub-head:first-of-type{margin-top:4px}
+</style>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><span id="brand1">Meatless</span> <span id="brand2">since</span></div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="demo" id="demoBanner"></div>
+  <div class="cols">
+    <div>
+      <section id="view-today">
+        <div class="readout">
+          <div class="eyebrow" id="roLabel"></div>
+          <div class="clock">
+            <div class="big" id="cDays" aria-live="polite">–</div>
+            <div class="hms" id="cHms">00:00:00</div>
+          </div>
+          <div class="readout-foot" id="roFoot"></div>
+        </div>
+        <div id="backBox"></div>
+        <div class="tiles" id="tiles"></div>
+        <div class="strip" id="stripBox"></div>
+        <div class="next" id="nextBox"></div>
+        <div class="nudge" id="nudge"></div>
+      </section>
+      <section id="view-nutrition" hidden></section>
+      <section id="view-caveats" hidden></section>
+      <section id="view-you" hidden></section>
+    </div>
+    <section id="view-journey" hidden></section>
+  </div>
+</div>
+
+<div class="dock"><div class="dock-in"><button class="btn wide" id="logBtn"></button></div></div>
+<div id="modal"></div>
+
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════════════════════════════
+   REFERENCE DATA — one global dataset throughout.
+
+   Climate, land and freshwater all come from Poore & Nemecek 2018
+   (Science): ~38,700 farms across 119 countries. Using a single dataset
+   for all three means meat and its replacement are always measured the
+   same way, so the difference between them actually means something.
+
+   Water is FRESHWATER WITHDRAWAL, not total water footprint — the scarce
+   kind. That is why beef sits below pork here and cheese above everything.
+   ══════════════════════════════════════════════════════════════════════ */
+
+const MEAT = {
+  beef:    { co2:60.0, land:185,  water:2080, price:{US:12.0, DE:16.0, GLOBAL:11.0} },
+  pork:    { co2:12.3, land:17.4, water:1796, price:{US:8.5,  DE:9.7,  GLOBAL:7.5} },
+  poultry: { co2:9.9,  land:12.2, water:660,  price:{US:7.5,  DE:9.0,  GLOBAL:6.0} },
+  fish:    { co2:11.0, land:4.2,  water:1850, price:{US:15.0, DE:17.0, GLOBAL:12.0} }
+};
+/* Boneless edible meat per animal, kilograms — one basis for all four,
+   because edible weight is what people enter. Carcass weights (pig ~90,
+   cattle ~300) run roughly 1.6x higher and are deliberately not used. */
+const YIELD = { chicken:1.2, turkey:7.5, pig:57, cattle:150 };
+const POULTRY_MIX = { chicken:0.88, turkey:0.12 };
+const FISH = { perKgLanded:0.9, filletToLanded:2.4, bycatchRatio:0.10, bycatchPerKg:3.0 };
+
+/* co2, land and water are per KILOGRAM OF MEAT REPLACED (protein-matched).
+   `shop` is the ordinary retail price per kilogram of the product as you
+   buy it, and `buy` is how much of it that takes to replace one kilo of
+   meat — so the price editor can ask for a shelf price like everything
+   else does, and the app does the conversion. Pulses are priced dried. */
+const SUBS = {
+  pulses:{ co2:1.7,  land:14.6, water:687,  buy:0.94, shop:{US:3.20,  DE:4.20,  GLOBAL:2.70} },
+  tofu:  { co2:7.0,  land:7.7,  water:328,  buy:2.2,  shop:{US:4.10,  DE:5.00,  GLOBAL:3.60} },
+  eggs:  { co2:5.6,  land:7.5,  water:694,  buy:1.2,  shop:{US:5.80,  DE:5.00,  GLOBAL:5.00} },
+  cheese:{ co2:28.7, land:105,  water:6726, buy:1.2,  shop:{US:10.00, DE:9.00,  GLOBAL:9.20} },
+  mock:  { co2:3.5,  land:4.0,  water:300,  buy:1.0,  shop:{US:10.50, DE:9.50,  GLOBAL:10.00} },
+  nuts:  { co2:0.4,  land:11.7, water:3721, buy:0.9,  shop:{US:24.40, DE:22.20, GLOBAL:22.20} }
+};
+const MIX_DEFAULT = { pulses:50, tofu:0, eggs:10, cheese:20, mock:20, nuts:0 };
+
+const COUNTRIES = {
+  US:    { cur:"$", units:"imperial", w:{beef:481, pork:423, poultry:904, fish:135}, footprint:14000 },
+  DE:    { cur:"€", units:"metric",   w:{beef:186, pork:544, poultry:283, fish:104}, footprint:10300 },
+  GLOBAL:{ cur:"$", units:"metric",   w:{beef:123, pork:237, poultry:327, fish:154}, footprint:4700 }
+};
+const LEVELS = { light:0.5, average:1, heavy:1.7 };
+const K = { homeShare:0.72, carCo2PerKm:0.21, windowDays:30, portionG:150 };
+
+/* Scarborough et al. 2023, Nature Food — measured diets of ~55,000 people,
+   kg CO2e per day per 2000 kcal: high meat (>100 g/day) 10.24, medium 7.55,
+   low 5.37, vegetarian 3.81. These are the resulting differences to the
+   vegetarian group, by daily meat intake. The climate counter is anchored
+   to this curve rather than built bottom-up, because a bottom-up swap
+   calculation came out roughly a third of the measured difference.
+
+   Above 150 g/day the value is held flat: that is the mean of the highest
+   group actually measured, and extrapolating past it would quickly claim a
+   larger saving than the whole meat-eating diet weighs. */
+const DIET_ANCHORS = [{g:0, d:0}, {g:25, d:1.56}, {g:75, d:3.74}, {g:150, d:6.43}];
+function measuredDailySaving(gPerDay){
+  if(gPerDay <= 0) return 0;
+  const last = DIET_ANCHORS[DIET_ANCHORS.length-1];
+  if(gPerDay >= last.g) return last.d;
+  for(let i = 1; i < DIET_ANCHORS.length; i++){
+    const a = DIET_ANCHORS[i-1], b = DIET_ANCHORS[i];
+    if(gPerDay <= b.g) return a.d + (b.d - a.d) * (gPerDay - a.g) / (b.g - a.g);
+  }
+  return last.d;
+}
+
+const UNITS = {
+  metric:  { mass:{f:1,       u:"kg"},  small:{f:1,        u:"g"},  vol:{f:1,        u:"L"},
+             area:{f:1,       u:"m²"},  dist:{f:1,         u:"km"}, tub:150, pitch:7140,  spot:14 },
+  imperial:{ mass:{f:2.20462, u:"lb"},  small:{f:0.035274, u:"oz"}, vol:{f:0.264172, u:"gal"},
+             area:{f:10.7639, u:"sq ft"},dist:{f:0.621371, u:"mi"}, tub:40,  pitch:76800, spot:150 }
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+   ENGLISH
+   ══════════════════════════════════════════════════════════════════════ */
+
+const EN = {
+code:"en", nm:"English", locale:"en-US",
+ui:{
+brand1:"Meatless", brand2:"since",
+tabs:{today:"Today", journey:"Journey", nutrition:"Nutrition", caveats:"Caveats", you:"You"},
+demoBold:"Sample data.", demoText:"This is what five months look like. Enter your own numbers and it starts counting with you.",
+demoBtn:"Set up", roLabel:"Without meat and fish for",
+since:"Since", meatFree:"Meat-free days", last30:"Last 30 days", of:"of",
+day:"day", days:"days", logCta:"What was on your plate today?",
+stripTitle:"The last 30 days", stripCount:(a,b)=>a+" of "+b+" logged days meat-free",
+stripNote:"No streak that can drop to zero. One meat day costs one dot, and the window clears itself after 30 days.",
+legend:{veg:"meat-free", fish:"fish", meat:"meat", unknown:"not sure", empty:"not logged"},
+backTitle:"Back again",
+backBody:(t,a,b)=>"Yesterday had meat in it. Today is a new plate.<br>Your "+t+" meat-free days are still there — that number never drops.<br>Window: "+a+" of "+b+" logged days. Yesterday cost one dot, not everything.",
+backBtn:"Log today",
+nextLabel:"Next milestone", doneLabel:"All milestones reached",
+doneH:"You are through the whole timeline", doneP:"From here it is just habit, and that runs itself.",
+dayN:n=>"Day "+n, expectedIn:(n,u)=>"expected in "+n+" "+u,
+todayMark:"Today",
+journeyH:"Your journey",
+journeyP:"Most milestones sit on the calendar. The few that name a quantity — a whole chicken, a hundred kilos, a flight — arrive when you actually reach it, so they move with how much meat you used to eat.",
+labDay:n=>"Day "+n, labMonth:n=>"Month "+n, labYear:n=>"Year "+n,
+cats:{body:"body", habit:"habit", animals:"animals", planet:"planet", money:"money"},
+nutriH:"What to watch",
+nutriLede:"A vegetarian diet works well. A few nutrients need a little more attention than they did before, and this is the full version of that — no shortcuts.",
+nutriFoot:"This app gives no medical or dietary advice and states no dosages. What gets measured and what follows from it is a conversation with a professional.",
+cavH:"The case against",
+cavLede:"Everything on this page argues against the numbers on the other pages. It sits here in full, deliberately, because a counter that only flatters you stops being useful the moment you check it.",
+cavTag:"Honestly",
+setupH:"Your setup", kvSince:"Since", kvBefore:"Before", kvRegion:"Region", kvInstead:"Instead",
+perWeek:" of meat and fish per week", change:"Change", changeNote:"Changes recalculate your whole timeline.",
+langH:"Language", unitsH:"Units", unitMetric:"Metric (kg, L, m²)", unitImperial:"Imperial (lb, gal, sq ft)",
+pricesH:"Prices",
+pricesNote:"Prices move faster than anything else in this app and vary by country, retailer and week. Yours always beat our defaults — overwrite anything you know better.",
+pricesMeat:u=>"What meat cost you, per "+u, pricesSub:u=>"What you pay for the replacements, per "+u,
+pricesFoot:u=>"Both groups are ordinary shelf prices — no conversion needed at your end. To replace 1 "+u+" of meat the app assumes 2.2 "+u+" of tofu, 1.2 of cheese or eggs, 1 of meat substitute, 0.9 of nuts, or 0.9 of dried pulses.",
+pricesReset:"Back to regional defaults", yours:"yours",
+mealsH:"Meat and fish days", mealsNote:"None of this resets anything. The amount is subtracted, and that is all.",
+appearH:"Appearance", themeAuto:"Automatic", themeLight:"Light", themeDark:"Dark",
+dataH:"Data", storage:"Storage",
+storageNote:"This app saves to the page's own store where that is available, so your phone and your computer show the same thing. A copy also lives in this browser. If the line above says “this device only”, the browser is the only copy — clearing site data would erase it. Exporting a backup covers both cases.",
+showBackup:"Show backup", restoreBackup:"Restore backup", resetAll:"Reset everything",
+sync:{checking:"checking", ready:"ready", synced:"synced across your devices", local:"this device only"},
+close:"Close", whyAria:"Where does this number come from?",
+sValue:"Value", sSource:"Source", sMethod:"Method", sLimit:"Limit",
+logTypes:[["plant","Plant-based only"],["eggdairy","With eggs or dairy"],["fish","With fish"],["meat","With meat"],["unknown","Can't remember"]],
+logTitle:d=>"What was on your plate "+d+"?", logToday:"today", logOn:d=>"on "+d,
+logHint:"A data point, not a grade. You can backfill any day, with no deadline.", logDelete:"Delete entry",
+amtFish:"Fish — roughly how much?", amtMeat:"Meat — what and how much?",
+amtIntro:"Only so the counters stay honest. If you don't know, leave the default.",
+amtWhich:"Which meat", amtHow:"Roughly how much", amtHint:p=>"A normal portion is about "+p+" raw.",
+amtNote:"Occasion, if you like", amtNotePh:"Birthday dinner", amtSave:"Log it",
+setTitle:"Set up", back:"Back", next:"Next", start:"Start counting",
+s0h:"When did you stop eating meat?",
+s0p:"Backdating is fine. If you only know the month, take the first — we count from the first day, not the perfect one.",
+s0l:"Start date",
+s1h:"How much meat was it before?", s1p:"Pick a starting point, then adjust. Rough is fine — it sets the scale, not the direction.",
+s1total:t=>"That is <b data-total>"+t+"</b> per week.",
+countries:{US:"United States", DE:"Germany", GLOBAL:"Global average"},
+levels:{light:"Light", average:"Average", heavy:"Heavy"},
+s2h:"What took the place of meat?",
+s2p:"Pick as many as apply and set the balance — only the ratio between them matters. This changes the climate, water, land and money numbers more than anything else you enter.",
+s2info:(co2,price)=>"Your mix costs <b>"+co2+" kg CO₂e</b> and <b>"+price+"</b> per kilo of meat replaced. For comparison: a kilo of pork is 12.3 kg CO₂e, a kilo of beef 60.",
+s2none:"Nothing picked yet — we'll assume pulses.", s2aria:n=>"Share of "+n,
+s3h:"Which number goes on top?",
+s3p:"The animal count points almost entirely at chicken, the climate number at beef. One counter cannot serve both.",
+s3foot:"All of it is editable later under You.",
+focusNames:{animals:"The animals", co2:"The climate", water:"The water", money:"The money"},
+backupH:"Backup", backupP:"Select the text and keep it somewhere safe. Downloads don't work in this view, so it's here to copy.",
+restoreH:"Restore backup", restoreP:"Paste the text from an earlier backup. This overwrites what you have now.",
+restoreBtn:"Restore", restoreErr:e=>"That wasn't a valid backup: "+e, noStart:"no start date in it",
+resetH:"Reset everything?",
+resetP:"Your start date, your setup and every entry will be deleted. This cannot be undone. If you are unsure, show a backup and copy it first.",
+cancel:"Cancel", del:"Delete",
+meatNames:{beef:"Beef", pork:"Pork and cured meat", poultry:"Poultry", fish:"Fish"},
+subNames:{pulses:"Pulses, grains, vegetables", tofu:"Tofu and tempeh", eggs:"Eggs", cheese:"Cheese and dairy", mock:"Meat substitutes", nuts:"Nuts and seeds"},
+animalNames:{chicken:"Chickens", turkey:"Turkeys", pig:"Pigs", cattle:"Cattle", fish:"Fish", bycatch:"Bycatch"},
+meatGeneric:"Meat"
+},
+tiles:{
+animals:{ k:"Animals you didn't eat", unit:"animals",
+  eq:(c,f)=>{ const w = Math.floor(c.animals), p = Math.round((c.animals-w)*100);
+    return (w < 1 ? "No whole animal yet — the first is "+p+"% of the way there."
+                  : w+" whole animals, the next one "+p+"% of the way there.")
+      + " Bycatch is counted in; roughly a tenth of what fleets land is discarded."; } },
+weight:{ k:"Meat and fish that never reached your plate",
+  eq:(c,f)=>"About "+f.n0(c.kgSum/0.15)+" portions of "+f.small(150)+" each." },
+co2:{ k:"Greenhouse gases not emitted",
+  eq:(c,f)=>{ if(c.co2 < 0) return "Negative — your replacement weighs more on the climate than the meat it replaced. See the cheese card under Caveats.";
+    return "About "+f.dist(c.co2/K.carCo2PerKm)+" in an average car."
+      + (f.share ? " At this rate, about "+f.n1(f.share)+"% of an average person's yearly footprint." : ""); } },
+water:{ k:"Freshwater not withdrawn",
+  eq:(c,f)=>c.water < 0 ? "Negative — your replacement draws more freshwater than the meat did. Cheese and nuts are the outliers here."
+    : "Roughly "+f.n0(f.tubs)+" full baths. This counts water actually taken from rivers and groundwater, not rainfall." },
+area:{ k:"Farmland not used",
+  eq:(c,f)=>{ if(c.area < 0) return "Negative — your replacement needs more land. With a lot of cheese that's the normal case, not the exception.";
+    return (f.pitches < 1 ? "About "+f.n0(f.spots)+" parking spaces." : "About "+f.n1(f.pitches)+" football pitches.")
+      + " Almost all of it traces back to beef."; } },
+money:{ k:"Money not spent",
+  eq:(c,f)=>c.money < 0 ? "A minus — your replacement currently costs more than the meat did. Cheese and nuts are the usual reason. Set your own prices under You if these don't match your shop."
+    : "About "+f.n0(c.money/10)+" cinema tickets." },
+days:{ k:"Meat-free days in total", unit:"days",
+  eq:(c,f)=>"This number never goes down. The best-known habit study found a median of 66 days — with a range from 18 to over 250." }
+},
+sources:{
+animals:{ h:"How many animals?",
+  value:"Boneless edible meat per animal: broiler chicken 1.2 kg, turkey 7.5 kg, pig 57 kg, cattle 150 kg. Fish: about 0.9 individuals per kg landed, and 2.4 kg landed per kg you eat.",
+  origin:"FAO production and slaughter statistics; bycatch share from Pérez Roda et al. 2019 (FAO), which puts global discards at roughly a tenth of landings.",
+  method:"All four species use the same weight basis — boneless edible, because that is what you enter. Carcass weights run about 1.6 times higher and are deliberately not used. Poultry is split 88% chicken, 12% turkey. Bycatch is added at 10% of landed weight and counted at a higher rate of individuals per kilo, because discarded animals are smaller. Its emissions and water are not added separately — they are already inside the fishery footprints.",
+  limit:"This is a balance-sheet average, not a link to specific animals: it says how many animals your quantity corresponds to if every part of an animal gets eaten somewhere. And less demand does not reduce production one for one — estimates land near 0.7.",
+  formula:"animals = kg chicken ÷ 1.2\n        + kg turkey  ÷ 7.5\n        + kg pork    ÷ 57\n        + kg beef    ÷ 150\n        + landed × 0.9\n        + landed × 0.10 × 3.0   (bycatch)" },
+weight:{ h:"How much meat?",
+  value:"Your own figure, projected across the time since your start date.",
+  origin:"The presets come from national food balance sheets: about 100 kg of meat per person per year in the United States, 55 kg in Germany, 43 kg as a global average.",
+  method:"Constant prior consumption, raw weight. Logged meat and fish days are subtracted from the matching category.",
+  limit:"It stands or falls with your estimate. Watch out for figures quoted elsewhere: carcass-weight statistics include bone and losses and run far above what people actually eat.",
+  formula:"kg = grams per week ÷ 1000 × weeks\n     − logged meat days" },
+co2:{ h:"How much CO₂?",
+  value:"Anchored to measured diets: going from a high-meat diet (over 100 g a day) to vegetarian is a difference of 6.43 kg CO₂e per day. Smaller meat intakes scale down from there — 3.74 at 75 g a day, 1.56 at 25 g.",
+  origin:"Scarborough et al. 2023, Nature Food — the actual diets of about 55,000 people in the UK, measured rather than modelled. The per-kilogram figures used to weight your particular meat mix come from Poore & Nemecek 2018, Science.",
+  method:"The measured curve sets the level; your meat composition and what you replaced it with scale it up or down around that, so the replacement mix still moves this number. Above 150 g of meat a day the value is held flat — that is the mean of the highest group actually measured, and extrapolating past it would soon claim a bigger saving than the entire meat-eating diet weighs.",
+  limit:"This is an observational comparison between groups of people, not a before-and-after measurement in you. Vegetarians differ from meat eaters in more than meat, so part of this difference belongs to the rest of their diet and their habits — read it as the upper end of what the change is worth, alongside “Healthy-user bias” under Caveats. A bottom-up calculation counting only the meat swap lands at roughly a third of this figure; the truth sits somewhere between. The percentage compares your rate, projected to a full year, against the average consumption-based footprint for your region — 14 t for the US, 10.3 t for Germany, 4.7 t globally — which is an average person's total, not yours. Early on it is a projection from a short period, not a measurement.",
+  formula:"per day = measured difference at your meat intake\nCO₂e   = per day × days\n         × (your net per kg ÷ reference net per kg)" },
+water:{ h:"Which water?",
+  value:"Freshwater withdrawal per kilogram: beef 2,080, pork 1,796, fish 1,850, poultry 660 litres. Cheese, at 6,726 per kilo of meat replaced, is the highest number in this app.",
+  origin:"Poore & Nemecek 2018 — the same dataset as the climate and land figures, so meat and replacement are always measured the same way.",
+  method:"Net against your replacement mix, protein-matched.",
+  limit:"Withdrawal is the scarce kind of water, which is why these numbers are far below the familiar “15,000 litres per kilo of beef” — that figure is mostly rainfall. The flip side: a litre in a dry region and a litre in a wet one count the same here, and that is wrong in every way that matters locally. Unlike the climate tile, this one is still a bottom-up swap calculation rather than anchored to measured diets, so it is the narrower of the two kinds of estimate.",
+  formula:"litres = Σ kg[meat] × (water[meat] − water[replacement])" },
+area:{ h:"Which land?",
+  value:"Land use per kilogram and year: beef 185, pork 17.4, poultry 12.2 m². Cheese runs about 105 per kilo of meat replaced.",
+  origin:"Poore & Nemecek 2018.",
+  method:"Net against your replacement mix. The unit is square metres times years: an area occupied for one year.",
+  limit:"A large share of cattle land is rangeland that could not grow crops. So this number does not mean that much grain could have grown there instead. It is also dominated by beef — for pork and poultry, little is left once the replacement is subtracted. Like the water tile and unlike the climate one, this is a bottom-up swap calculation rather than anchored to measured diets.",
+  formula:"m²·yr = Σ kg[meat] × (land[meat] − land[replacement])" },
+money:{ h:"Where the amount comes from",
+  value:"Regional retail averages per kilogram — every one of which you can overwrite under You.",
+  origin:"National retail price surveys, plus GFI Europe's Q1 2026 price tracking for the substitute figures. Replacement costs are our own calculation on a protein-matched basis.",
+  method:"The cost of your replacement mix is subtracted from the meat you didn't buy. The 0.72 factor accounts for the share of eating that happens at home — canteen and restaurant meals aren't in the base figure.",
+  limit:"These are the fastest-moving numbers in the app and the ones most likely to be wrong for you. The long-standing premium on meat substitutes has narrowed sharply: tracking at the UK's largest retailer in early 2026 put plant-based mince 29% below beef mince and meat-free meatballs 41% below, helped along by beef itself rising more than 10% year on year. But it still varies by market, retailer and product — beef burger patties stayed cheaper than plant-based ones, and in some countries substitutes remain dearer than discounted pork. Treat our defaults as a middle estimate and replace them with your own.",
+  formula:"money = (Σ kg[meat] × price[meat]\n         − kg total × price[replacement]) × 0.72" },
+days:{ h:"What's counted here",
+  value:"Every day you logged as plant-based or as containing eggs or dairy.",
+  origin:"Your own entries.",
+  method:"Days with no entry count as unknown and lower nothing. Fish and meat days don't count here, but they don't subtract either.",
+  limit:"This number never goes down, by design. It rewards self-monitoring, not perfection.",
+  formula:"days = number of entries logged\n       plant-based or egg/dairy" }
+},
+milestones:[
+{d:1,k:"body",t:"Your gut moves first",b:"Gut bacteria shift measurably within about a day of a new diet reaching the colon. Small study, extreme diets — what it shows is the speed, not the size of the benefit.",q:"David et al. 2014, Nature — controlled trial, n=10"},
+{d:1,k:"habit",t:"Two swaps worth making today",b:"Add something with vitamin C to iron-rich meals — lemon on lentils, peppers with grains. And move coffee or tea to half an hour after eating instead of during.",q:"Iron absorption studies; national dietary guidance"},
+{d:2,k:"habit",t:"Day two is the one that counts",b:"Day one is a decision. Day two is where it starts becoming something you do. Nothing to optimise today — just do it again.",q:"Your own figures"},
+{d:5,k:"habit",t:"Your shopping has already changed",b:"Five days in and the basket looks different before you've thought about it. That shift in what you routinely buy tends to outlast motivation, which is exactly the point.",q:"Habit formation literature; Lally et al. 2010"},
+{d:7,k:"animals",t:"First week",b:"One week without meat. For scale: most national guidelines suggest well under half of what the average person in a high-income country actually eats — you have just spent seven days under every one of them.",q:"FAO food balance sheets; WHO and national dietary guidelines"},
+{d:10,k:"animals",t:"Ten days in",b:"Enough for the counters to have something to show. Tap any number to see where it comes from — the sources are the point of this app, not decoration.",q:"Your own figures"},
+{d:14,k:"habit",t:"Make legumes routine",b:"This is the change that carries the rest: lentils, chickpeas, beans. Iron, zinc and protein in one pot. Build up slowly if your digestion complains at first.",q:"EFSA dietary reference values"},
+{d:14,k:"body",t:"Blood pressure: small, well evidenced",b:"Pooled across seven controlled trials, vegetarian diets lowered systolic pressure by about 4.8 mmHg and diastolic by 2.2. If you take blood pressure medication, make this change with your doctor.",q:"Yokoyama et al. 2014, JAMA Internal Medicine — 7 controlled trials, n=311"},
+{d:21,k:"habit",t:"A handful of nuts, daily",b:"About 25 g of nuts or seeds a day is standard dietary advice, and doubly useful now for zinc and magnesium. Walnuts add plant omega-3; pumpkin and sunflower seeds are the cheap zinc heroes.",q:"National dietary guidelines; PREDIMED trial"},
+{d:28,k:"body",t:"TMAO falls",b:"TMAO forms when gut bacteria process carnitine from red meat. In a randomised feeding trial it more than doubled on red meat and came back down within four weeks off it.",q:"Wang, Bergeron et al. 2019, Eur Heart J — randomised crossover, n=113"},
+{d:30,k:"money",t:"First month",b:"What's here depends almost entirely on what replaced the meat. Home-cooked pulses save the most, cheese the least. Substitutes used to carry a steep premium, but that gap has closed fast and in some markets reversed. If our prices don't match your receipts, overwrite them under You.",q:"GFI Europe price tracking Q1 2026; national retail price surveys"},
+{d:40,at:{m:"chicken",v:1},k:"animals",t:"Your first whole chicken",b:"A broiler yields roughly 1.2 kg of edible meat, so this is where the first whole bird lands. Broilers are slaughtered at five to seven weeks; chickens can live several years.",q:"FAO production statistics; national slaughter data"},
+{d:42,k:"body",t:"Blood lipids — the strongest evidence here",b:"Across eleven controlled trials, vegetarian diets lowered LDL cholesterol by about 13 mg/dL and non-HDL by about 12. HDL dropped slightly too. Replacing meat with a lot of cheese gives most of this away.",q:"Wang et al. 2015, J Am Heart Assoc — meta-analysis, 11 controlled trials"},
+{d:45,k:"habit",t:"Omega-3 without fish",b:"Flax and walnuts cover ALA easily, but conversion to the long-chain EPA and DHA is poor and varies a lot between people. Algae oil is the one direct source left if you want it.",q:"EFSA adequate intake; ALA conversion isotope studies"},
+{d:50,k:"money",t:"Fifty days",b:"Long enough that the money tile has stopped being noise. If it looks smaller than you expected, open it and check which replacement you picked — that single setting moves this number more than anything else.",q:"Your own figures"},
+{d:60,k:"habit",t:"Protein reality check",b:"You're almost certainly fine. About 0.8 g per kg of body weight is the reference; lentils, tofu, oats, eggs and dairy get there without effort. The old rule about combining proteins in one meal is obsolete.",q:"EFSA and WHO/FAO protein reference values"},
+{d:66,k:"habit",t:"66 days, not 21",b:"In the best-known habit study the median time until a new routine felt automatic was 66 days, ranging from 18 to well over 250. The popular 21-day figure appears in no study. Taking longer is normal.",q:"Lally et al. 2010, Eur J Soc Psychol"},
+{d:75,k:"body",t:"Your palate is recalibrating",b:"Taste adapts. When intake changes, perception thresholds for salt and fat shift within weeks — vegetables that read as bland in month one start reading as sweet. Nothing mystical, just receptors adjusting.",q:"Sensory adaptation studies (Bertino et al. 1982; Mattes 1993)"},
+{d:90,k:"body",t:"Your first meaningful HbA1c",b:"HbA1c reflects the last two to three months, so only now does a reading describe your new diet. In people with type 2 diabetes, vegetarian diets lowered it by about 0.4 points.",q:"Yokoyama et al. 2014, Cardiovasc Diagn Ther — type 2 diabetes only"},
+{d:90,k:"habit",t:"The convenience-food audit",b:"Meat substitutes are a good on-ramp, and the old objection to them has largely dissolved: by early 2026 plant-based mince ran roughly a third below beef mince at the UK's largest retailer. What hasn't changed is the processing — salt is comparable to meat, though saturated fat is much lower. Keep the ones you actually like and cook the rest from beans and tofu.",q:"GFI Europe price tracking Q1 2026 (Tesco, 33 products); consumer association market surveys"},
+{d:100,k:"habit",t:"One hundred days",b:"Three digits. Past the median for a routine becoming automatic, and past the point where most people who try something like this have quietly stopped. Worth telling someone.",q:"Lally et al. 2010 — median 66 days"},
+{d:115,at:{m:"money",v:100},k:"money",t:"The first hundred",b:"Roughly ten cinema tickets. The biggest saving lever has little to do with vegetarianism: cooking from scratch instead of buying ready-made.",q:"Own model from retail prices"},
+{d:120,k:"habit",t:"Zinc and selenium",b:"Phytate in whole grains and legumes binds zinc, so requirements run higher. Soaking, sprouting and sourdough break phytate down. Brazil nuts are selenium-rich but wildly variable — not a daily portion.",q:"EFSA dietary reference values (phytate-dependent)"},
+{d:126,k:"body",t:"Weight: a tailwind, not a promise",b:"In randomised trials, vegetarian participants averaged one to two kilos below controls after about 18 weeks — and for lacto-ovo diets specifically the result wasn't statistically solid. Cheese and pasta still count.",q:"Huang et al. 2016, J Gen Intern Med — 12 RCTs, n=1151"},
+{d:150,k:"planet",t:"You've moved a real number",b:"The climate tile is now large enough to compare to something you'd recognise: a long drive, a short flight, a week of someone's heating. Small against the total, and it is genuinely yours.",q:"Poore & Nemecek 2018, Science"},
+{d:159,at:{m:"co2",v:100},k:"planet",t:"A hundred kilos of CO₂e",b:"Roughly 480 km in an average car. The honest range is wide — it depends on the data basis and on what landed on the plate instead.",q:"Poore & Nemecek 2018; IEA fleet emission factors"},
+{d:180,k:"habit",t:"Six months — good time for bloodwork",b:"A full blood count and ferritin, ideally alongside CRP, since inflammation pushes ferritin up. Mention that you eat vegetarian; it changes what gets looked at. No guideline sets this interval — it's practice, not law.",q:"WHO ferritin guideline 2020; interval is convention"},
+{d:202,at:{m:"chicken",v:5},k:"animals",t:"Five chickens",b:"Almost all poultry, and that's the point of this chapter: poultry is a quarter of the weight but nine out of ten animals. Weight sits in beef, animals sit in chicken.",q:"FAO production statistics; own calculation"},
+{d:250,k:"animals",t:"You've stopped counting",b:"Somewhere around here people stop treating this as a project and start treating it as a fact about themselves. That shift — from what you do to what you are — is the one that predicts whether it lasts.",q:"Identity-based habit research; self-perception theory"},
+{d:270,k:"habit",t:"About eight hundred meals",b:"Roughly what you've eaten since the start. Most of them were unremarkable, which is the best possible outcome: this stopped being a decision and became lunch.",q:"Your own figures"},
+{d:300,k:"animals",t:"The fish you never see",b:"Around a tenth of what fishing fleets land is bycatch — animals caught and discarded. Because they're smaller, they add more individuals per kilo than the fish you actually eat. Your counter includes them.",q:"Pérez Roda et al. 2019, FAO — global discard estimate"},
+{d:365,k:"planet",t:"One year of climate math",b:"A real, well-evidenced contribution — and a larger one than most people expect. Measured across tens of thousands of diets, dropping meat is among the biggest single changes a household can make: for a former heavy meat eater it runs to roughly two tonnes of CO₂e a year, about a long-haul return flight. It still leaves electricity, heating and travel untouched, and it remains a comparison between groups of people rather than a measurement of you.",q:"Poore & Nemecek 2018; Scarborough et al. 2023, Nature Food; national consumption-based footprint data"},
+{d:365,k:"money",t:"One year of money",b:"Replacing meat mostly with pulses, grains and vegetables saves real money over a year. Replacing it with cheese saves little. Your receipts beat our estimate — adjust the prices under You.",q:"Own model from retail price surveys"},
+{d:365,k:"body",t:"One year — the honest part",b:"Get B12, ferritin and vitamin D checked once. Lacto-ovo vegetarians average lower B12 and lower iron stores than meat eaters; both are easy to manage, but only if you know about them.",q:"Gilsing et al. 2010, Eur J Clin Nutr; Haider et al. 2018"},
+{d:400,k:"habit",t:"You are somebody's example now",b:"After a year, people around you have stopped asking whether it's a phase. You don't have to argue for anything — the most persuasive thing available to you is simply eating well in front of people and not making it their problem.",q:"Social norm research; Sparkman & Walton 2017"},
+{d:500,k:"planet",t:"Five hundred days",b:"Long enough that the yearly rate is the number that matters, not the total. Whatever your figure is per year, it now repeats without you thinking about it. That's what makes diet changes worth more than one-off gestures.",q:"Poore & Nemecek 2018"},
+{d:548,k:"animals",t:"Eighteen months",b:"A year and a half. The animal counter is dominated by poultry, which means the thing driving it is the most ordinary item on the menu — not the steak anyone argues about.",q:"FAO production statistics; own calculation"},
+{d:730,k:"animals",t:"Two years — and what doesn't change",b:"About twenty land animals, overwhelmingly broiler chickens. The part we won't leave out: eggs and dairy keep laying hens and dairy cows in the picture, and both are eventually slaughtered. Vegetarian isn't animal-free.",q:"FAO production statistics; laying-hen productivity data"},
+{d:981,at:{m:"pig",v:1},k:"animals",t:"A whole pig",b:"About 57 kg of pork — the edible boneless yield of one pig, which lives roughly six months. Pork is the world's most-eaten meat by weight, but per kilo it carries about a fifth of beef's climate cost.",q:"FAO production statistics; Poore & Nemecek 2018"},
+{d:1079,at:{m:"co2",v:500},k:"planet",t:"A long-haul flight",b:"Roughly 500 kg CO₂e — about one long round-trip flight, including the extra warming effects at altitude. Depending on the method, the same flight is calculated anywhere from half to double that.",q:"Poore & Nemecek 2018; aviation emission calculators"},
+{d:1095,k:"habit",t:"Three years",b:"At this point the interesting question isn't whether you'll keep going. It's that you've quietly built a repertoire — a dozen meals you can make without looking anything up. That repertoire is the actual infrastructure here.",q:"Your own figures"},
+{d:1500,k:"planet",t:"Four years, compounding",b:"Nothing dramatic happens at this point, and that's the finding. The value of a diet change is that it accrues every single day without further decisions, which is the opposite of how most environmental effort works.",q:"Poore & Nemecek 2018"},
+{d:1825,k:"body",t:"Five years — no number here on purpose",b:"Plenty of apps count added days of life. We can't: the large cohorts disagree. One found vegetarians slightly lower on all-cause mortality, another found no difference. The most telling figure is that both cohorts as a whole died at about half the national rate — vegetarians and meat eaters alike.",q:"Orlich et al. 2013, JAMA Intern Med; Key et al. 2009, Am J Clin Nutr"},
+{d:2190,k:"habit",t:"Six years",b:"Long enough that you've been through every awkward situation this creates — the wedding, the work trip, the relative who takes it personally — and found a way through each one. That's not willpower any more, it's just experience.",q:"Your own figures"},
+{d:2555,k:"body",t:"Colorectal cancer — two answers",b:"Processed meat is IARC Group 1: the link to bowel cancer is considered established, though the group says nothing about how large the risk is. The two big cohorts then contradict each other on vegetarians. We'd rather tell you that than pick a side.",q:"IARC/WHO 2015; Orlich et al. 2015; Key et al. 2009"},
+{d:2920,k:"animals",t:"Eight years",b:"Enough that the total has stopped being an abstraction. Whatever the exact figure, the direction has never been in doubt — and unlike almost everything else in this app, this counter needs no assumptions about anyone but you.",q:"FAO production statistics; own calculation"},
+{d:3650,k:"body",t:"Ten years: the most solid long-term finding",b:"In EPIC-Oxford, vegetarians had about ten fewer cases of coronary heart disease per thousand people over ten years. A meta-analysis of eight cohorts confirms the direction and grades it probable. It's observational — a comparison between groups, not a before-and-after in you.",q:"Tong et al. 2019, BMJ; Dybvik et al. 2023, Eur J Nutr (RR 0.79)"},
+{d:4200,k:"body",t:"An underrated win: diverticular disease",b:"Rarely discussed, and it puts a lot of people in hospital. In EPIC-Oxford, vegetarians had about a third lower risk of being admitted for it over 11.6 years, with fibre intake helping independently on top.",q:"Crowe et al. 2011, BMJ — EPIC-Oxford, n=47,033"},
+{d:5475,k:"habit",t:"Fifteen years",b:"Most things people start don't run this long. There's no badge that means much at this range — but if you started this hoping it would become unremarkable, it has, and that was always the win condition.",q:"Your own figures"},
+{d:6570,k:"body",t:"The uncomfortable number: stroke",b:"The same study that shows ten fewer heart disease cases also found about 20 percent more strokes among vegetarians, mostly haemorrhagic. A twelve-cohort meta-analysis did not find that effect. You're reading it here so you don't first hear it as an accusation.",q:"Tong et al. 2019, BMJ (HR 1.20); Dybvik et al. 2023 (RR 0.90, n.s.)"},
+{d:7300,k:"animals",t:"Twenty years",b:"A couple of hundred land animals, nearly all broilers. You will probably never see a whole cow in this app — one animal yields around 150 kg of boneless meat, which takes some fifteen years at average consumption. Weight sits in beef, animals sit in chicken.",q:"FAO production statistics; own calculation"}
+],
+nudges:[
+"Red lentils collapse as they cook and taste savoury. Bolognese without the detour.",
+"Squeeze lemon over lentils — the vitamin C helps you absorb the iron.",
+"Try coffee half an hour after the meal today instead of with it.",
+"A small handful of nuts, about 25 g. That's standard advice anyway.",
+"Hummus and pepper strips on bread. The pepper unlocks the iron in the chickpeas.",
+"Chickpeas instead of chicken in the curry: same sauce, same spices.",
+"Kidney beans or smoked tofu instead of tuna in the salad. Both bring bite.",
+"Rapeseed or canola oil in the dressing. Better omega-3 ratio, same price.",
+"Nothing planned tonight? Red lentils, tin of tomatoes, cumin. Twenty minutes.",
+"Sourdough over regular bread helps — it breaks down the phytate that binds iron and zinc.",
+"Dried pulses cost about a quarter of the tinned kind. One pot on Sunday covers the week.",
+"Miso or nutritional yeast in the stock. The umami trick for savoury depth.",
+"If your digestion protests the first few weeks: build up slowly, chew well, drink enough.",
+"22 out of 30 is a good month. Not a month with eight failures.",
+"Your total never goes down. Whatever yesterday was.",
+"The 30-day window recovers on its own. You don't have to rescue it.",
+"One steak undoes nothing. The evidence is about patterns over weeks, not meals.",
+"Meat had it yesterday? Today is a new plate. That's all that happens here.",
+"A broiler is about 1.2 kg. That's why the animal counter moves fastest on poultry.",
+"Weight sits in beef, animals sit in chicken. The two numbers point different ways.",
+"Cheese is a pleasure, not a meat substitute. Per kilo it costs more than pork.",
+"Tap a number. Behind it is where it comes from and what it doesn't say.",
+"You don't have to convince anyone. Your plate argues more quietly than you do.",
+"The best money-saving tip has little to do with going meatless: cook it yourself.",
+"If you're not in the mood for numbers, just log and walk away. That's enough."
+],
+nutrition:[
+{h:"Iron",b:"Plant iron is absorbed less readily than iron from meat. Vitamin C in the same meal improves it substantially; coffee and black tea reduce it. Good sources: pulses, oats, pumpkin seeds, millet. Reference intakes run around 16 mg a day for menstruating women and 11 mg for men. Have ferritin checked after six months, ideally alongside CRP, since inflammation inflates it."},
+{h:"Vitamin B12",b:"Eggs and dairy usually cover it, but often narrowly: lacto-ovo vegetarians average clearly lower levels than meat eaters, and a small share sit in the deficient range. If you eat few eggs and little dairy, ask for holo-transcobalamin rather than plain serum B12 — it picks up a shortfall earlier."},
+{h:"Iodine",b:"Sea fish was one of the main sources, and it's gone now. Use iodised salt — the simplest lever there is. In regions with iodised salt programmes this is usually enough; where there aren't any, it's worth asking about. Seaweed is potent but wildly variable in dose."},
+{h:"Omega-3",b:"Losing fish means losing EPA and DHA. Flaxseed, walnuts and rapeseed oil supply ALA, but the body converts only a few percent of it, and less in men. Algae oil at around 250 mg EPA plus DHA a day is the one direct source that remains. Not mandatory — but if you take it, the cost belongs in your money tile."},
+{h:"Zinc and selenium",b:"Phytate from whole grains and legumes binds zinc, so requirements are higher than for meat eaters. Soaking, sprouting and sourdough fermentation break phytate down and improve both zinc and iron. Selenium depends heavily on local soils; whole grains, pulses and eggs contribute."},
+{h:"Protein",b:"Rarely a real problem. About 0.8 g per kg of body weight is the adult reference, rising to about 1.0 after 65 and higher with heavy training. Pulses and grains complement each other, and they don't have to be in the same meal — across the day is fine."},
+{h:"The cheese trap",b:"The most common beginner's mistake is replacing meat with cheese and ready meals. It gains you little on health, little on climate — cheese is among the heaviest non-meat foods per kilo — and nothing at all on money. Pulses are the core of a vegetarian diet, not the side dish."},
+{h:"If you're pregnant, young, older or training hard",b:"Requirements differ meaningfully for pregnancy and breastfeeding, for children and teenagers, for older adults and for serious athletes. A well-planned vegetarian diet works in all of these cases, but the margins are thinner. Worth one conversation with a professional rather than guesswork."}
+],
+caveats:[
+{h:"Why we don't write “saved”",b:"Less demand lowers production, but not one for one. Agricultural economics puts it at roughly 0.7 fewer animals produced per animal not bought — the rest is absorbed by price and substitution effects. Clearly below one, clearly above zero. It works, just not as arithmetic on individual animals. That's why this app says “animals you didn't eat”, not “animals saved”."},
+{h:"Vegetarian is not animal-free",b:"If you still eat eggs and dairy, animals stay in the picture. Laying hens are slaughtered after roughly 18 months; dairy cows only give milk because they calve, and their male calves go to veal or beef. Your animal counter measures what you didn't eat. It does not claim nobody is affected any more."},
+{h:"What the water number doesn't say",b:"This app counts freshwater withdrawal — water actually taken from rivers, lakes and groundwater. That's deliberate. The famous “15,000 litres per kilo of beef” figure is mostly green water: rain that would have fallen on that pasture anyway. Counting withdrawals reorders everything: beef falls below pork, and cheese and nuts rise above all meat. It also means a litre in Andalusia and a litre in Ireland count the same here, which is wrong in every way that matters locally. Water scarcity is regional; a global average can't express that."},
+{h:"Cheese is not a meat substitute",b:"Per kilogram of protein-matched replacement, cheese carries about 29 kg CO₂e and by far the highest freshwater withdrawal and land use of anything in this app. Replace beef with cheese and you still gain a lot. Replace pork or chicken with cheese and your climate tile can legitimately show zero or a negative number. That's the arithmetic, not a bug."},
+{h:"Intervention or observation?",b:"Two kinds of study sit behind these numbers and they say very different things. Intervention trials assign a diet and measure before and after — blood pressure, blood lipids and TMAO come from these, and they support causal reading. Cohort studies compare groups of people who already differed — every long-term finding on heart disease, cancer and mortality comes from these. They say people who eat this way have less X. Not: if you eat this way you will get less X."},
+{h:"Healthy-user bias — the number that relativises the rest",b:"In EPIC-Oxford, the standardised mortality of the entire cohort was about half the national rate — identical for vegetarians and meat eaters. People who volunteer for nutrition cohorts smoke less, move more, are better educated and see doctors more often. An unknown but certainly meaningful share of every flattering cohort figure belongs to those habits, not to the food. It doesn't invalidate the studies; it limits what you can take from them personally."},
+{h:"What this app knows about itself",b:"In the Cochrane review of smoking cessation, automated text messages worked clearly; apps as such showed no measurable effect at very low certainty of evidence. What did work was self-monitoring and if-then planning, not points and badges. And quitting smoking is binary, while eating is not: several times a day, social, with no sensible zero point. We know of no randomised trial of a meat-reduction app with measured long-term outcomes. This app is a well-reasoned bet, not a proven method."},
+{h:"The fish numbers are the shakiest here",b:"Average weight per fish in a typical diet can only be estimated: between a herring and a farmed salmon lies a factor of twenty-five. We use a mid-range figure and say so. Bycatch is included in the animal count at roughly a tenth of landed weight, which adds proportionally more individuals because those animals are smaller. Not counted: the wild fish ground into feed for farmed salmon and shrimp — a large number we can't pin down credibly. And the carbon figure says nothing about overfishing or seabed damage, which are the actual ecological problems with fish."},
+{h:"Global averages hide a lot",b:"Every environmental number here is a global median from one dataset. Real footprints vary enormously — beef from a deforested pasture and beef from a dairy herd differ by roughly a factor of three, and the same is true across regions and farming systems. Your own shopping basket is not the median. Treat these tiles as orders of magnitude, not measurements, and treat the direction as much more reliable than the size."},
+{h:"Numbers we deliberately don't use",b:"“About 1,100 animals per human lifetime” — the individual components can't be reproduced with current data. “Processed meat is in the same category as tobacco” — formally true and thoroughly misleading, since the IARC group describes how certain a link is, not how large the risk is. “21 days makes a habit” — appears in no study. “You've offset X trees” — single-tree figures vary by a factor of five, and several major forests have recently flipped to net carbon sources. “You'll live X days longer” — there is no sound basis for it."},
+{h:"Why nothing here resets to zero",b:"In the best-known habit study, a single missed occasion lowered automaticity by less than half a scale point and was quickly recovered. Addiction research adds the idea that it isn't the lapse that ends the attempt, it's the judgement afterwards — though that was tested on smokers and restrained eaters, not on people eating less meat. We still think the smaller risk is to never let a counter drop to zero. That's a design decision, not a study result."},
+{h:"The small print",b:"This app gives no medical or dietary advice, makes no diagnoses, states no dosages and calculates no personal risk. If you take blood pressure or diabetes medication, a diet change can move your numbers — a reason to involve your doctor, not a reason to skip it, and never a reason to adjust medication yourself. Every figure here is an estimate built on averages: your own entry, production statistics and life-cycle assessments. If thinking about food starts to feel compulsive or frightening, that can be a warning sign — this app shows no calories and no body weight, and stepping away from it is always allowed."}
+]
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+   DEUTSCH
+   ══════════════════════════════════════════════════════════════════════ */
+
+const DE = {
+code:"de", nm:"Deutsch", locale:"de-DE",
+ui:{
+brand1:"Fleischfrei", brand2:"seit",
+tabs:{today:"Heute", journey:"Weg", nutrition:"Nährstoffe", caveats:"Einwände", you:"Du"},
+demoBold:"Beispieldaten.", demoText:"So sieht es nach fünf Monaten aus. Trag deine eigenen Zahlen ein, dann rechnet die App mit dir.",
+demoBtn:"Einrichten", roLabel:"Ohne Fleisch und Fisch seit",
+since:"Start", meatFree:"Fleischfreie Tage", last30:"Letzte 30 Tage", of:"von",
+day:"Tag", days:"Tagen", logCta:"Was war heute auf dem Teller?",
+stripTitle:"Die letzten 30 Tage", stripCount:(a,b)=>a+" von "+b+" erfassten Tagen fleischfrei",
+stripNote:"Keine Serie, die auf null springen kann. Ein Fleischtag kostet einen Punkt, und das Fenster räumt sich nach 30 Tagen von selbst auf.",
+legend:{veg:"fleischfrei", fish:"Fisch", meat:"Fleisch", unknown:"unsicher", empty:"nicht erfasst"},
+backTitle:"Wieder da",
+backBody:(t,a,b)=>"Gestern war Fleisch dabei. Heute ist ein neuer Teller.<br>Deine "+t+" fleischfreien Tage sind noch da — diese Zahl sinkt nie.<br>Fenster: "+a+" von "+b+" erfassten Tagen. Gestern hat einen Punkt gekostet, nicht alles.",
+backBtn:"Heute eintragen",
+nextLabel:"Nächster Meilenstein", doneLabel:"Alle Meilensteine erreicht",
+doneH:"Du bist durch die ganze Zeitleiste", doneP:"Ab hier ist es Gewohnheit, und die läuft von allein.",
+dayN:n=>"Tag "+n, expectedIn:(n,u)=>"voraussichtlich in "+n+" "+u,
+todayMark:"Heute",
+journeyH:"Dein Weg",
+journeyP:"Die meisten Meilensteine hängen am Kalender. Die wenigen, die eine Menge nennen — ein ganzes Huhn, hundert Kilo, ein Flug — kommen dann, wenn du sie tatsächlich erreichst, und verschieben sich mit deiner früheren Fleischmenge.",
+labDay:n=>"Tag "+n, labMonth:n=>"Monat "+n, labYear:n=>"Jahr "+n,
+cats:{body:"Körper", habit:"Alltag", animals:"Tiere", planet:"Planet", money:"Geld"},
+nutriH:"Worauf du achten solltest",
+nutriLede:"Vegetarisch funktioniert gut. Ein paar Nährstoffe brauchen etwas mehr Aufmerksamkeit als vorher, und das hier ist die vollständige Fassung davon — ohne Abkürzungen.",
+nutriFoot:"Diese App gibt keine ärztliche oder ernährungstherapeutische Beratung und nennt keine Dosierungen. Was gemessen wird und was daraus folgt, klärst du mit einer Fachperson.",
+cavH:"Was dagegen spricht",
+cavLede:"Alles auf dieser Seite argumentiert gegen die Zahlen auf den anderen Seiten. Es steht hier bewusst vollständig, weil ein Zähler, der dir nur schmeichelt, in dem Moment nutzlos wird, in dem du ihn nachprüfst.",
+cavTag:"Ehrlich gesagt",
+setupH:"Deine Angaben", kvSince:"Start", kvBefore:"Vorher", kvRegion:"Region", kvInstead:"Stattdessen",
+perWeek:" Fleisch und Fisch pro Woche", change:"Ändern", changeNote:"Änderungen rechnen deine gesamte Zeitleiste neu.",
+langH:"Sprache", unitsH:"Einheiten", unitMetric:"Metrisch (kg, L, m²)", unitImperial:"Imperial (lb, gal, sq ft)",
+pricesH:"Preise",
+pricesNote:"Preise bewegen sich schneller als alles andere in dieser App und schwanken nach Land, Händler und Woche. Deine schlagen unsere Vorgaben immer — überschreib alles, was du besser weißt.",
+pricesMeat:u=>"Was dich Fleisch gekostet hat, pro "+u, pricesSub:u=>"Was du für den Ersatz bezahlst, pro "+u,
+pricesFoot:u=>"Beide Gruppen sind ganz normale Ladenpreise — du musst nichts umrechnen. Um 1 "+u+" Fleisch zu ersetzen, rechnet die App mit 2,2 "+u+" Tofu, 1,2 Käse oder Eier, 1 Fleischersatz, 0,9 Nüsse oder 0,9 trockene Hülsenfrüchte.",
+pricesReset:"Zurück auf Regionalwerte", yours:"deiner",
+mealsH:"Fleisch- und Fischtage", mealsNote:"Nichts davon setzt etwas zurück. Die Menge wird abgezogen, mehr passiert nicht.",
+appearH:"Darstellung", themeAuto:"Automatisch", themeLight:"Hell", themeDark:"Dunkel",
+dataH:"Daten", storage:"Speicherung",
+storageNote:"Die App speichert im Datenspeicher der Seite, sofern er verfügbar ist — dann zeigen Handy und Rechner denselben Stand. Zusätzlich liegt eine Kopie in diesem Browser. Steht oben „nur auf diesem Gerät“, ist der Browser die einzige Ablage: Dann sind deine Daten weg, wenn du Browserdaten löschst. Eine Sicherung hilft in beiden Fällen.",
+showBackup:"Sicherung anzeigen", restoreBackup:"Sicherung einspielen", resetAll:"Alles zurücksetzen",
+sync:{checking:"wird geprüft", ready:"bereit", synced:"auf allen Geräten gesichert", local:"nur auf diesem Gerät"},
+close:"Schließen", whyAria:"Woher kommt diese Zahl?",
+sValue:"Wert", sSource:"Quelle", sMethod:"Methode", sLimit:"Grenze",
+logTypes:[["plant","Nur pflanzlich"],["eggdairy","Mit Ei oder Milch"],["fish","Mit Fisch"],["meat","Mit Fleisch"],["unknown","Weiß ich nicht mehr"]],
+logTitle:d=>"Was war "+d+" auf dem Teller?", logToday:"heute", logOn:d=>"am "+d,
+logHint:"Ein Datenpunkt, keine Note. Du kannst jeden Tag nachtragen, ohne Frist.", logDelete:"Eintrag löschen",
+amtFish:"Fisch — wie viel ungefähr?", amtMeat:"Fleisch — was und wie viel?",
+amtIntro:"Nur damit die Zähler ehrlich rechnen. Wenn du es nicht weißt, lass die Voreinstellung stehen.",
+amtWhich:"Welches Fleisch", amtHow:"Ungefähr wie viel", amtHint:p=>"Eine normale Portion sind etwa "+p+" roh.",
+amtNote:"Anlass, wenn du magst", amtNotePh:"Geburtstagsessen", amtSave:"Eintragen",
+setTitle:"Einrichten", back:"Zurück", next:"Weiter", start:"Los geht’s",
+s0h:"Seit wann isst du kein Fleisch mehr?",
+s0p:"Rückwirkend ist völlig in Ordnung. Wenn du nur den Monat weißt, nimm den Ersten — wir zählen ab dem ersten Tag, nicht ab dem perfekten.",
+s0l:"Startdatum",
+s1h:"Wie viel Fleisch war es vorher?", s1p:"Wähl einen Ausgangspunkt und schieb ihn zurecht. Grob reicht — es setzt die Größenordnung, nicht die Richtung.",
+s1total:t=>"Zusammen <b data-total>"+t+"</b> pro Woche.",
+countries:{US:"USA", DE:"Deutschland", GLOBAL:"Weltdurchschnitt"},
+levels:{light:"Wenig", average:"Durchschnitt", heavy:"Viel"},
+s2h:"Was ist an die Stelle von Fleisch getreten?",
+s2p:"Mehrfachauswahl. Schieb die Regler so, wie es bei dir ungefähr aussieht — es zählt nur das Verhältnis zueinander. Diese Antwort verändert Klima-, Wasser-, Flächen- und Geldzahl stärker als jede andere Angabe.",
+s2info:(co2,price)=>"Deine Mischung kostet <b>"+co2+" kg CO₂e</b> und <b>"+price+"</b> je ersetztem Kilo Fleisch. Zum Vergleich: ein Kilo Schwein liegt bei 12,3 kg CO₂e, ein Kilo Rind bei 60.",
+s2none:"Noch nichts gewählt — die App rechnet dann mit Hülsenfrüchten.", s2aria:n=>"Anteil "+n,
+s3h:"Welche Zahl soll oben stehen?",
+s3p:"Die Tierzahl zeigt fast vollständig auf Huhn, die Klimazahl auf Rind. Ein einzelner Zähler kann beide Motive nicht bedienen.",
+s3foot:"Alles später unter „Du“ änderbar.",
+focusNames:{animals:"Die Tiere", co2:"Das Klima", water:"Das Wasser", money:"Das Geld"},
+backupH:"Sicherung", backupP:"Markiere den Text und leg ihn an einen sicheren Ort. Herunterladen funktioniert in dieser Ansicht nicht — deshalb zum Kopieren.",
+restoreH:"Sicherung einspielen", restoreP:"Füg den Text einer früheren Sicherung ein. Das überschreibt deinen aktuellen Stand.",
+restoreBtn:"Einspielen", restoreErr:e=>"Das war keine gültige Sicherung: "+e, noStart:"kein Startdatum enthalten",
+resetH:"Wirklich alles zurücksetzen?",
+resetP:"Dein Startdatum, deine Angaben und alle Einträge werden gelöscht. Das lässt sich nicht rückgängig machen. Wenn du unsicher bist: erst eine Sicherung anzeigen und kopieren.",
+cancel:"Abbrechen", del:"Löschen",
+meatNames:{beef:"Rind und Kalb", pork:"Schwein und Wurst", poultry:"Geflügel", fish:"Fisch"},
+subNames:{pulses:"Hülsenfrüchte, Getreide, Gemüse", tofu:"Tofu und Tempeh", eggs:"Eier", cheese:"Käse und Milchprodukte", mock:"Fleischersatz", nuts:"Nüsse und Kerne"},
+animalNames:{chicken:"Masthühner", turkey:"Puten", pig:"Schweine", cattle:"Rinder", fish:"Fische", bycatch:"Beifang"},
+meatGeneric:"Fleisch"
+},
+tiles:{
+animals:{ k:"Tiere, die du nicht gegessen hast", unit:"Tiere",
+  eq:(c,f)=>{ const w = Math.floor(c.animals), p = Math.round((c.animals-w)*100);
+    return (w < 1 ? "Noch kein ganzes Tier — das erste ist zu "+p+" % voll."
+                  : w+" ganze Tiere, das nächste zu "+p+" % voll.")
+      + " Beifang ist mitgezählt; rund ein Zehntel der Fänge wird wieder über Bord geworfen."; } },
+weight:{ k:"Fleisch und Fisch, das nie auf deinem Teller lag",
+  eq:(c,f)=>"Etwa "+f.n0(c.kgSum/0.15)+" Portionen zu je "+f.small(150)+"." },
+co2:{ k:"Treibhausgase, die nicht entstanden sind",
+  eq:(c,f)=>{ if(c.co2 < 0) return "Negativ — dein Ersatz wiegt klimatisch schwerer als das Fleisch, das er ablöst. Siehe die Käse-Karte unter Einwände.";
+    return "Etwa "+f.dist(c.co2/K.carCo2PerKm)+" mit einem durchschnittlichen Auto."
+      + (f.share ? " Hochgerechnet rund "+f.n1(f.share)+" % des Jahresfußabdrucks einer durchschnittlichen Person." : ""); } },
+water:{ k:"Süßwasser, das nicht entnommen wurde",
+  eq:(c,f)=>c.water < 0 ? "Negativ — dein Ersatz entnimmt mehr Süßwasser als das Fleisch. Käse und Nüsse sind hier die Ausreißer."
+    : "Rund "+f.n0(f.tubs)+" volle Badewannen. Gezählt wird Wasser, das wirklich aus Flüssen und Grundwasser entnommen wird, nicht Regen." },
+area:{ k:"Ackerfläche, die nicht gebraucht wurde",
+  eq:(c,f)=>{ if(c.area < 0) return "Negativ — dein Ersatz braucht mehr Fläche. Bei viel Käse ist das der Normalfall, nicht die Ausnahme.";
+    return (f.pitches < 1 ? "Etwa "+f.n0(f.spots)+" Parkplätze." : "Etwa "+f.n1(f.pitches)+" Fußballfelder.")
+      + " Fast alles davon geht auf Rind zurück."; } },
+money:{ k:"Geld, das du nicht ausgegeben hast",
+  eq:(c,f)=>c.money < 0 ? "Ein Minus — dein Ersatz kostet derzeit mehr als das Fleisch. Käse und Nüsse sind meist der Grund. Setz unter „Du“ deine eigenen Preise, wenn unsere nicht zu deinem Laden passen."
+    : "Etwa "+f.n0(c.money/10)+" Kinobesuche." },
+days:{ k:"Fleischfreie Tage insgesamt", unit:"Tage",
+  eq:(c,f)=>"Diese Zahl sinkt nie. In der bekanntesten Gewohnheitsstudie lag der Median bei 66 Tagen — Spanne 18 bis über 250." }
+},
+sources:{
+animals:{ h:"Wie viele Tiere?",
+  value:"Verzehrbares Fleisch ohne Knochen je Tier: Masthuhn 1,2 kg, Pute 7,5 kg, Schwein 57 kg, Rind 150 kg. Fisch: etwa 0,9 Individuen je Kilo Anlandung, und 2,4 kg Anlandung je Kilo, das du isst.",
+  origin:"FAO-Produktions- und Schlachtstatistik; Beifanganteil nach Pérez Roda et al. 2019 (FAO), die den weltweiten Rückwurf auf rund ein Zehntel der Anlandungen beziffern.",
+  method:"Alle vier Arten nutzen dieselbe Gewichtsbasis — verzehrbar und ohne Knochen, weil du genau das eingibst. Schlachtgewichte liegen etwa 1,6-mal höher und werden bewusst nicht verwendet. Geflügel wird 88 % Huhn und 12 % Pute aufgeteilt. Beifang kommt mit 10 % des Anlandegewichts dazu und wird mit mehr Individuen je Kilo gezählt, weil die Tiere kleiner sind. Seine Emissionen und sein Wasser werden nicht zusätzlich addiert — sie stecken schon in den Fischerei-Ökobilanzen.",
+  limit:"Das ist ein bilanzieller Durchschnitt, keine Zuordnung konkreter Tiere: Er sagt, wie vielen Tieren deine Menge entspricht, wenn alle Teile eines Tieres irgendwo gegessen werden. Und weniger Nachfrage senkt die Produktion nicht eins zu eins — Schätzungen liegen bei etwa 0,7.",
+  formula:"Tiere = kg Huhn    ÷ 1,2\n      + kg Pute    ÷ 7,5\n      + kg Schwein ÷ 57\n      + kg Rind    ÷ 150\n      + Anlandung × 0,9\n      + Anlandung × 0,10 × 3,0   (Beifang)" },
+weight:{ h:"Wie viel Fleisch?",
+  value:"Deine eigene Angabe, hochgerechnet auf die Zeit seit deinem Startdatum.",
+  origin:"Die Voreinstellungen stammen aus nationalen Versorgungsbilanzen: rund 100 kg Fleisch pro Kopf und Jahr in den USA, 55 kg in Deutschland, 43 kg im Weltdurchschnitt.",
+  method:"Konstanter früherer Konsum, Rohgewicht. Eingetragene Fleisch- und Fischtage werden von der jeweiligen Art abgezogen.",
+  limit:"Steht und fällt mit deiner Schätzung. Achtung bei fremden Zahlen: Schlachtgewichtsstatistiken enthalten Knochen und Verluste und liegen weit über dem, was tatsächlich gegessen wird.",
+  formula:"kg = Gramm pro Woche ÷ 1000 × Wochen\n     − eingetragene Fleischtage" },
+co2:{ h:"Wie viel CO₂?",
+  value:"An gemessenen Ernährungsweisen verankert: Der Wechsel von viel Fleisch (über 100 g am Tag) zu vegetarisch macht 6,43 kg CO₂e pro Tag aus. Kleinere Fleischmengen skalieren herunter — 3,74 bei 75 g am Tag, 1,56 bei 25 g.",
+  origin:"Scarborough et al. 2023, Nature Food — die tatsächlichen Ernährungsweisen von rund 55.000 Menschen in Großbritannien, gemessen statt modelliert. Die Kilogrammwerte, mit denen deine konkrete Fleischmischung gewichtet wird, stammen aus Poore & Nemecek 2018, Science.",
+  method:"Die gemessene Kurve setzt das Niveau; deine Fleischzusammensetzung und dein Ersatz skalieren es darum herum — die Ersatzmischung bewegt diese Zahl also weiterhin. Ab 150 g Fleisch am Tag bleibt der Wert konstant: Das ist der Mittelwert der höchsten tatsächlich gemessenen Gruppe, und darüber hinaus zu extrapolieren würde bald mehr Ersparnis behaupten, als der gesamte Fleischesser-Speiseplan wiegt.",
+  limit:"Das ist ein Beobachtungsvergleich zwischen Menschengruppen, keine Vorher-Nachher-Messung bei dir. Vegetarier unterscheiden sich in mehr als nur Fleisch, ein Teil dieser Differenz gehört also zum Rest ihrer Ernährung und ihren Gewohnheiten — lies sie als oberes Ende dessen, was die Umstellung wert ist, zusammen mit „Healthy-User-Bias“ unter Einwände. Eine Bottom-up-Rechnung, die nur den Tausch zählt, kommt auf etwa ein Drittel davon; die Wahrheit liegt dazwischen. Der Prozentwert vergleicht deine auf ein Jahr hochgerechnete Rate mit dem durchschnittlichen konsumbasierten Fußabdruck deiner Region — 14 t für die USA, 10,3 t für Deutschland, 4,7 t weltweit — also mit dem Gesamtwert einer durchschnittlichen Person, nicht mit deinem. Am Anfang ist es zudem eine Hochrechnung aus wenigen Wochen, keine Messung.",
+  formula:"pro Tag = gemessene Differenz bei deiner Fleischmenge\nCO₂e    = pro Tag × Tage\n          × (dein Netto je kg ÷ Referenz je kg)" },
+water:{ h:"Welches Wasser?",
+  value:"Süßwasserentnahme je Kilogramm: Rind 2.080, Schwein 1.796, Fisch 1.850, Geflügel 660 Liter. Käse ist mit 6.726 je ersetztem Kilo Fleisch die höchste Zahl dieser App.",
+  origin:"Poore & Nemecek 2018 — derselbe Datensatz wie bei Klima und Fläche, damit Fleisch und Ersatz immer gleich gemessen werden.",
+  method:"Netto gegen deine Ersatzmischung, proteinbezogen.",
+  limit:"Entnahme ist die knappe Art von Wasser, weshalb diese Zahlen weit unter den bekannten „15.000 Liter je Kilo Rind“ liegen — jene Zahl ist überwiegend Regen. Die Kehrseite: Ein Liter in einer trockenen und einer feuchten Region zählt hier gleich, und das ist in jeder Hinsicht falsch, die vor Ort zählt. Anders als die Klima-Kachel ist diese hier weiterhin eine Bottom-up-Tauschrechnung und nicht an gemessene Ernährungsweisen gekoppelt — also die engere der beiden Schätzarten.",
+  formula:"Liter = Σ kg[Art] × (Wasser[Art] − Wasser[Ersatz])" },
+area:{ h:"Welche Fläche?",
+  value:"Flächenbedarf je Kilogramm und Jahr: Rind 185, Schwein 17,4, Geflügel 12,2 m². Käse liegt bei rund 105 je ersetztem Kilo Fleisch.",
+  origin:"Poore & Nemecek 2018.",
+  method:"Netto gegen deine Ersatzmischung. Die Einheit ist Quadratmeter mal Jahr: eine Fläche, die ein Jahr lang belegt wird.",
+  limit:"Ein großer Teil der Rinderfläche ist Weideland, auf dem kein Ackerbau möglich wäre. Die Zahl sagt also nicht, dass dort Getreide für Menschen wachsen könnte. Sie wird außerdem von Rind dominiert — bei Schwein und Geflügel bleibt nach Abzug des Ersatzes wenig übrig. Wie beim Wasser und anders als beim Klima ist das eine Bottom-up-Tauschrechnung, nicht an gemessene Ernährungsweisen gekoppelt.",
+  formula:"m²·Jahr = Σ kg[Art] × (Fläche[Art] − Fläche[Ersatz])" },
+money:{ h:"Woher der Betrag kommt",
+  value:"Regionale Durchschnittspreise je Kilogramm — jeden einzelnen kannst du unter „Du“ überschreiben.",
+  origin:"Nationale Preiserhebungen, für die Ersatzwerte zusätzlich das Preis-Tracking von GFI Europe aus dem ersten Quartal 2026. Die Ersatzkosten sind unsere eigene Rechnung auf Proteinbasis.",
+  method:"Die Kosten deiner Ersatzmischung werden vom nicht gekauften Fleisch abgezogen. Der Faktor 0,72 berücksichtigt, dass Kantine und Restaurant im Basiswert nicht enthalten sind.",
+  limit:"Das sind die schnellsten Zahlen der App und die, die bei dir am ehesten danebenliegen. Der jahrelange Aufschlag auf Fleischersatz ist deutlich geschrumpft: Beim größten britischen Händler lag pflanzliches Hack Anfang 2026 29 % unter Rinderhack, fleischfreie Bällchen 41 % darunter — auch weil Rindfleisch selbst über 10 % im Jahresvergleich teurer wurde. Es bleibt aber unterschiedlich nach Markt, Händler und Produkt: Rinder-Burgerpatties blieben günstiger als pflanzliche, und in manchen Ländern liegt Ersatz weiter über rabattiertem Schweinefleisch. Nimm unsere Vorgaben als Mittelwert und ersetz sie durch deine.",
+  formula:"Geld = (Σ kg[Art] × Preis[Art]\n       − kg gesamt × Preis[Ersatz]) × 0,72" },
+days:{ h:"Was hier gezählt wird",
+  value:"Jeder Tag, den du als rein pflanzlich oder mit Ei und Milch eingetragen hast.",
+  origin:"Deine eigenen Einträge.",
+  method:"Tage ohne Eintrag zählen als unbekannt und senken nichts. Fisch- und Fleischtage zählen hier nicht mit, ziehen aber auch nichts ab.",
+  limit:"Diese Zahl sinkt konstruktionsbedingt nie. Sie belohnt Selbstbeobachtung, nicht Perfektion.",
+  formula:"Tage = Anzahl Einträge vom Typ\n       pflanzlich oder Ei und Milch" }
+},
+milestones:[
+{d:1,k:"body",t:"Dein Darm reagiert als Erstes",b:"Die Darmflora verschiebt sich messbar, etwa einen Tag nachdem die neue Kost den Dickdarm erreicht. Kleine Studie, extreme Kostformen — was sie zeigt, ist die Geschwindigkeit, nicht die Größe des Nutzens.",q:"David et al. 2014, Nature — kontrollierte Studie, n=10"},
+{d:1,k:"habit",t:"Zwei Handgriffe für heute",b:"Etwas mit Vitamin C zu eisenreichen Mahlzeiten — Zitrone auf Linsen, Paprika zum Getreide. Und Kaffee oder Tee eine halbe Stunde nach dem Essen statt dazu.",q:"Resorptionsstudien zu Eisen; nationale Ernährungsempfehlungen"},
+{d:2,k:"habit",t:"Tag zwei ist der, der zählt",b:"Tag eins ist eine Entscheidung. Tag zwei ist der Punkt, an dem es anfängt, etwas zu werden, das du tust. Heute gibt es nichts zu optimieren — mach es einfach nochmal.",q:"Deine eigenen Zahlen"},
+{d:5,k:"habit",t:"Dein Einkauf hat sich schon geändert",b:"Nach fünf Tagen sieht der Wagen anders aus, bevor du darüber nachdenkst. Genau diese Verschiebung im Routinekauf überlebt die Motivation, und darum geht es.",q:"Gewohnheitsforschung; Lally et al. 2010"},
+{d:7,k:"animals",t:"Erste Woche",b:"Eine Woche ohne Fleisch. Zur Einordnung: Die meisten nationalen Empfehlungen liegen bei deutlich weniger als der Hälfte dessen, was in reichen Ländern tatsächlich gegessen wird — du warst gerade sieben Tage unter jeder einzelnen davon.",q:"FAO-Versorgungsbilanzen; WHO und nationale Empfehlungen"},
+{d:10,k:"animals",t:"Zehn Tage",b:"Genug, dass die Zähler etwas zu zeigen haben. Tipp auf eine beliebige Zahl, dann siehst du, woher sie kommt — die Quellen sind der Punkt dieser App, keine Deko.",q:"Deine eigenen Zahlen"},
+{d:14,k:"habit",t:"Hülsenfrüchte zur Routine machen",b:"Das ist der Umbau, der alles andere trägt: Linsen, Kichererbsen, Bohnen. Eisen, Zink und Protein in einem Topf. Steigere langsam, wenn der Bauch am Anfang protestiert.",q:"EFSA-Referenzwerte"},
+{d:14,k:"body",t:"Blutdruck: klein und gut belegt",b:"Über sieben kontrollierte Studien gepoolt senkte vegetarische Kost den oberen Wert um etwa 4,8 mmHg und den unteren um 2,2. Wenn du Blutdrucksenker nimmst, mach die Umstellung mit deiner Ärztin.",q:"Yokoyama et al. 2014, JAMA Internal Medicine — 7 kontrollierte Studien, n=311"},
+{d:21,k:"habit",t:"Eine Handvoll Nüsse, täglich",b:"Rund 25 g Nüsse oder Samen am Tag sind ohnehin Standardempfehlung und jetzt doppelt nützlich für Zink und Magnesium. Walnüsse bringen pflanzliches Omega-3 mit, Kürbis- und Sonnenblumenkerne sind die günstigen Zink-Helden.",q:"Nationale Ernährungsempfehlungen; PREDIMED-Studie"},
+{d:28,k:"body",t:"TMAO fällt",b:"TMAO entsteht, wenn Darmbakterien Carnitin aus rotem Fleisch verstoffwechseln. In einer randomisierten Fütterungsstudie lag es unter rotem Fleisch mehr als doppelt so hoch und war nach vier Wochen Karenz wieder unten.",q:"Wang, Bergeron et al. 2019, Eur Heart J — randomisiertes Crossover, n=113"},
+{d:30,k:"money",t:"Erster Monat",b:"Was hier steht, hängt fast vollständig daran, was das Fleisch ersetzt hat. Selbst gekochte Hülsenfrüchte sparen am meisten, Käse am wenigsten. Ersatzprodukte hatten lange einen hohen Aufschlag, der ist stark geschrumpft und hat sich in manchen Märkten umgedreht. Passen unsere Preise nicht zu deinen Kassenbons, überschreib sie unter „Du“.",q:"GFI Europe Preis-Tracking Q1 2026; nationale Preiserhebungen"},
+{d:40,at:{m:"chicken",v:1},k:"animals",t:"Dein erstes ganzes Masthuhn",b:"Ein Masthuhn liefert rund 1,2 kg verzehrbares Fleisch — hier landet also das erste ganze Tier. Masthühner werden nach fünf bis sieben Wochen geschlachtet; Hühner könnten mehrere Jahre alt werden.",q:"FAO-Produktionsstatistik; nationale Schlachtdaten"},
+{d:42,k:"body",t:"Blutfette — die beste Evidenz hier",b:"Über elf kontrollierte Studien senkte vegetarische Kost das LDL um rund 13 mg/dl und das Non-HDL um etwa 12. Das HDL sank leicht mit. Wer Fleisch durch viel Käse ersetzt, verschenkt den größten Teil davon.",q:"Wang et al. 2015, J Am Heart Assoc — Meta-Analyse, 11 kontrollierte Studien"},
+{d:45,k:"habit",t:"Omega-3 ohne Fisch",b:"Leinsamen und Walnüsse decken ALA locker, aber die Umwandlung in die langkettigen EPA und DHA ist schlecht und schwankt stark zwischen Personen. Algenöl ist die einzige direkte Quelle, die bleibt.",q:"EFSA-Zufuhrempfehlung; Isotopenstudien zur ALA-Konversion"},
+{d:50,k:"money",t:"Fünfzig Tage",b:"Lang genug, dass die Geld-Kachel kein Rauschen mehr ist. Wenn sie kleiner ausfällt als erwartet, schau nach, welchen Ersatz du gewählt hast — diese eine Einstellung bewegt die Zahl stärker als alles andere.",q:"Deine eigenen Zahlen"},
+{d:60,k:"habit",t:"Protein-Realitätscheck",b:"Du liegst mit hoher Wahrscheinlichkeit richtig. Rund 0,8 g pro Kilo Körpergewicht sind der Referenzwert; Linsen, Tofu, Haferflocken, Eier und Milchprodukte kommen mühelos dahin. Die alte Regel, Proteine in einer Mahlzeit zu kombinieren, gilt als überholt.",q:"EFSA- und WHO/FAO-Referenzwerte für Protein"},
+{d:66,k:"habit",t:"66 Tage, nicht 21",b:"In der bekanntesten Gewohnheitsstudie lag der Median bei 66 Tagen, bis sich eine neue Routine automatisch anfühlte, mit einer Spanne von 18 bis über 250. Die populären 21 Tage stehen in keiner Studie. Länger zu brauchen ist normal.",q:"Lally et al. 2010, Eur J Soc Psychol"},
+{d:75,k:"body",t:"Dein Geschmack kalibriert sich neu",b:"Geschmack passt sich an. Ändert sich die Zufuhr, verschieben sich die Wahrnehmungsschwellen für Salz und Fett binnen Wochen — Gemüse, das im ersten Monat fad wirkte, schmeckt plötzlich süß. Nichts Mystisches, nur Rezeptoren.",q:"Studien zur sensorischen Adaptation (Bertino et al. 1982; Mattes 1993)"},
+{d:90,k:"body",t:"Dein erster aussagekräftiger HbA1c",b:"Der HbA1c bildet die letzten zwei bis drei Monate ab — erst jetzt beschreibt ein Wert deine neue Ernährung. Bei Menschen mit Typ-2-Diabetes senkte vegetarische Kost ihn um etwa 0,4 Punkte.",q:"Yokoyama et al. 2014, Cardiovasc Diagn Ther — nur Typ-2-Diabetes"},
+{d:90,k:"habit",t:"Das Fertigprodukt-Audit",b:"Fleischersatz ist ein guter Einstieg, und der alte Einwand dagegen hat sich weitgehend aufgelöst: Anfang 2026 lag pflanzliches Hack beim größten britischen Händler rund ein Drittel unter Rinderhack. Geblieben ist die Verarbeitung — Salz vergleichbar mit Fleisch, gesättigte Fette deutlich niedriger. Behalte, was dir wirklich schmeckt, und koch den Rest aus Bohnen und Tofu.",q:"GFI Europe Preis-Tracking Q1 2026 (Tesco, 33 Produkte); Marktchecks von Verbraucherorganisationen"},
+{d:100,k:"habit",t:"Einhundert Tage",b:"Drei Stellen. Jenseits des Medians, ab dem eine Routine automatisch wird, und jenseits des Punktes, an dem die meisten so etwas still wieder aufgeben. Das darf man jemandem erzählen.",q:"Lally et al. 2010 — Median 66 Tage"},
+{d:115,at:{m:"money",v:100},k:"money",t:"Die ersten hundert",b:"Rund zehn Kinobesuche. Der größte Hebel beim Sparen hat wenig mit Vegetarismus zu tun: selbst kochen statt fertig kaufen.",q:"Eigene Modellrechnung aus Handelspreisen"},
+{d:120,k:"habit",t:"Zink und Selen im Blick",b:"Phytat aus Vollkorn und Hülsenfrüchten bindet Zink, deshalb liegt der Bedarf höher. Einweichen, Keimen und Sauerteig bauen Phytat ab. Paranüsse sind selenreich, aber unberechenbar dosiert — nicht als tägliche Portion.",q:"EFSA-Referenzwerte (phytatabhängig)"},
+{d:126,k:"body",t:"Die Waage: Rückenwind, keine Zusage",b:"In randomisierten Studien lagen vegetarische Teilnehmende nach rund 18 Wochen ein bis zwei Kilo unter der Vergleichsgruppe — und für lakto-ovo-vegetarische Kost war das Ergebnis statistisch nicht gesichert. Käse und Nudeln zählen weiter.",q:"Huang et al. 2016, J Gen Intern Med — 12 RCTs, n=1151"},
+{d:150,k:"planet",t:"Du hast eine echte Zahl bewegt",b:"Die Klima-Kachel ist jetzt groß genug für einen Vergleich, den man kennt: eine lange Autofahrt, ein Kurzstreckenflug, eine Woche Heizung. Klein gegen das Gesamte, und trotzdem tatsächlich deins.",q:"Poore & Nemecek 2018, Science"},
+{d:159,at:{m:"co2",v:100},k:"planet",t:"Hundert Kilogramm CO₂e",b:"Rund 480 km mit einem durchschnittlichen Auto. Die ehrliche Spanne ist breit — sie hängt an der Datenbasis und daran, was stattdessen auf dem Teller lag.",q:"Poore & Nemecek 2018; IEA-Flottenemissionsfaktoren"},
+{d:180,k:"habit",t:"Ein halbes Jahr — Zeit für Blutwerte",b:"Kleines Blutbild und Ferritin, am besten mit CRP, weil Entzündungen den Ferritinwert hochtreiben. Sag beim Termin, dass du vegetarisch isst; das ändert, worauf geschaut wird. Keine Leitlinie schreibt dieses Intervall vor — es ist Praxis, kein Gesetz.",q:"WHO-Ferritin-Leitlinie 2020; Intervall ist Konvention"},
+{d:202,at:{m:"chicken",v:5},k:"animals",t:"Fünf Masthühner",b:"Fast alles Geflügel, und genau darum geht es in diesem Kapitel: Geflügel ist ein Viertel des Gewichts, aber neun von zehn Tieren. Beim Rind stecken die Kilos, beim Huhn die Tiere.",q:"FAO-Produktionsstatistik; eigene Rechnung"},
+{d:250,k:"animals",t:"Du hast aufgehört mitzuzählen",b:"Irgendwo hier hören Menschen auf, das als Projekt zu behandeln, und fangen an, es als Tatsache über sich zu behandeln. Diese Verschiebung — von dem, was du tust, zu dem, was du bist — sagt am besten voraus, ob es bleibt.",q:"Forschung zu identitätsbasierten Gewohnheiten"},
+{d:270,k:"habit",t:"Rund achthundert Mahlzeiten",b:"Ungefähr so viele hast du seit dem Start gegessen. Die meisten davon waren unauffällig, und das ist das bestmögliche Ergebnis: Es hat aufgehört, eine Entscheidung zu sein, und ist Mittagessen geworden.",q:"Deine eigenen Zahlen"},
+{d:300,k:"animals",t:"Die Fische, die niemand sieht",b:"Rund ein Zehntel dessen, was Fangflotten anlanden, ist Beifang — gefangen und wieder über Bord geworfen. Weil diese Tiere kleiner sind, bringen sie pro Kilo mehr Individuen als die Fische, die du isst. Dein Zähler hat sie drin.",q:"Pérez Roda et al. 2019, FAO — globale Rückwurfschätzung"},
+{d:365,k:"planet",t:"Ein Jahr Klimabilanz",b:"Ein realer, gut belegter Beitrag — und ein größerer, als die meisten erwarten. Über Zehntausende gemessene Ernährungsweisen hinweg gehört der Verzicht auf Fleisch zu den größten Einzelhebeln eines Haushalts: Wer vorher viel Fleisch aß, kommt auf grob zwei Tonnen CO₂e im Jahr, etwa ein Langstrecken-Hin-und-Rückflug. Strom, Heizung und Verkehr bleiben davon unberührt — und es bleibt ein Vergleich zwischen Menschengruppen, keine Messung an dir.",q:"Poore & Nemecek 2018; Scarborough et al. 2023, Nature Food; nationale konsumbasierte Fußabdruckdaten"},
+{d:365,k:"money",t:"Ein Jahr Geld",b:"Wer Fleisch überwiegend durch Hülsenfrüchte, Getreide und Gemüse ersetzt, spart über ein Jahr echtes Geld. Wer es durch Käse ersetzt, spart wenig. Deine Kassenbons schlagen unsere Schätzung — passe die Preise unter „Du“ an.",q:"Eigene Modellrechnung aus Preiserhebungen"},
+{d:365,k:"body",t:"Ein Jahr — und jetzt der ehrliche Teil",b:"Lass einmal B12, Ferritin und Vitamin D prüfen. Lakto-ovo-Vegetarier liegen im Schnitt niedriger bei B12 und bei den Eisenspeichern als Fleischesser; beides ist gut zu handhaben, aber nur, wenn du davon weißt.",q:"Gilsing et al. 2010, Eur J Clin Nutr; Haider et al. 2018"},
+{d:400,k:"habit",t:"Du bist inzwischen jemandes Beispiel",b:"Nach einem Jahr fragt im Umfeld niemand mehr, ob das eine Phase ist. Du musst für nichts argumentieren — das Überzeugendste, was dir zur Verfügung steht, ist gut zu essen und es niemandem zum Problem zu machen.",q:"Forschung zu sozialen Normen; Sparkman & Walton 2017"},
+{d:500,k:"planet",t:"Fünfhundert Tage",b:"Lang genug, dass die Jahresrate zählt und nicht die Gesamtsumme. Was auch immer deine Zahl pro Jahr ist — sie wiederholt sich jetzt, ohne dass du daran denkst. Genau das macht Ernährungsänderungen mehr wert als einmalige Gesten.",q:"Poore & Nemecek 2018"},
+{d:548,k:"animals",t:"Achtzehn Monate",b:"Anderthalb Jahre. Der Tierzähler wird von Geflügel dominiert — das heißt, angetrieben wird er vom unauffälligsten Posten der Speisekarte, nicht vom Steak, über das alle streiten.",q:"FAO-Produktionsstatistik; eigene Rechnung"},
+{d:730,k:"animals",t:"Zwei Jahre — und was sich nicht ändert",b:"Rund zwanzig Landtiere, ganz überwiegend Masthühner. Der Teil, den wir nicht weglassen: Eier und Milch halten Legehennen und Milchkühe im Bild, und beide werden am Ende geschlachtet. Vegetarisch ist nicht tierfrei.",q:"FAO-Produktionsstatistik; Daten zur Legeleistung"},
+{d:981,at:{m:"pig",v:1},k:"animals",t:"Ein ganzes Mastschwein",b:"Rund 57 kg Schweinefleisch — die verzehrbare Ausbeute ohne Knochen eines Schweins, das etwa ein halbes Jahr lebt. Schwein ist weltweit das meistgegessene Fleisch nach Gewicht, trägt pro Kilo aber nur etwa ein Fünftel der Klimalast von Rind.",q:"FAO-Produktionsstatistik; Poore & Nemecek 2018"},
+{d:1079,at:{m:"co2",v:500},k:"planet",t:"Ein Langstreckenflug",b:"Rund 500 kg CO₂e — etwa ein langer Hin- und Rückflug, inklusive der zusätzlichen Wirkung in großer Höhe. Je nach Methode wird derselbe Flug zwischen der Hälfte und dem Doppelten davon berechnet.",q:"Poore & Nemecek 2018; Flugemissionsrechner"},
+{d:1095,k:"habit",t:"Drei Jahre",b:"An diesem Punkt ist die interessante Frage nicht mehr, ob du weitermachst. Sondern dass du still ein Repertoire aufgebaut hast — ein Dutzend Gerichte, die du ohne Nachschlagen kannst. Dieses Repertoire ist die eigentliche Infrastruktur hier.",q:"Deine eigenen Zahlen"},
+{d:1500,k:"planet",t:"Vier Jahre, kumulierend",b:"An diesem Punkt passiert nichts Dramatisches, und genau das ist der Befund. Der Wert einer Ernährungsänderung liegt darin, dass sie jeden Tag anfällt, ohne weitere Entscheidungen — das Gegenteil davon, wie die meisten Umweltanstrengungen funktionieren.",q:"Poore & Nemecek 2018"},
+{d:1825,k:"body",t:"Fünf Jahre — hier bewusst keine Zahl",b:"Viele Apps rechnen gewonnene Lebenstage vor. Wir können das nicht: Die großen Kohorten widersprechen sich. Eine fand Vegetarier bei der Gesamtsterblichkeit leicht niedriger, eine andere gar keinen Unterschied. Am aufschlussreichsten ist, dass beide Kohorten insgesamt bei etwa der Hälfte der landesüblichen Sterblichkeit lagen — Vegetarier und Fleischesser gleichermaßen.",q:"Orlich et al. 2013, JAMA Intern Med; Key et al. 2009, Am J Clin Nutr"},
+{d:2190,k:"habit",t:"Sechs Jahre",b:"Lang genug, dass du jede unangenehme Situation durchgespielt hast, die das erzeugt — die Hochzeit, die Dienstreise, den Verwandten, der es persönlich nimmt — und für jede einen Weg gefunden hast. Das ist keine Willenskraft mehr, das ist Erfahrung.",q:"Deine eigenen Zahlen"},
+{d:2555,k:"body",t:"Darmkrebs — zwei Antworten",b:"Verarbeitetes Fleisch ist in IARC-Gruppe 1: Der Zusammenhang mit Darmkrebs gilt als gesichert, wobei die Gruppe nichts über die Größe des Risikos sagt. Die beiden großen Kohorten widersprechen sich dann bei Vegetariern. Das sagen wir dir lieber, als eine Seite zu wählen.",q:"IARC/WHO 2015; Orlich et al. 2015; Key et al. 2009"},
+{d:2920,k:"animals",t:"Acht Jahre",b:"Genug, dass die Summe keine Abstraktion mehr ist. Wie genau die Zahl auch ausfällt, die Richtung stand nie infrage — und anders als fast alles andere in dieser App braucht dieser Zähler keine Annahmen über irgendjemanden außer dir.",q:"FAO-Produktionsstatistik; eigene Rechnung"},
+{d:3650,k:"body",t:"Zehn Jahre: der stabilste Langzeitbefund",b:"In EPIC-Oxford traten bei Vegetariern über zehn Jahre etwa zehn Fälle koronarer Herzkrankheit weniger pro tausend Menschen auf. Eine Meta-Analyse über acht Kohorten bestätigt die Richtung und stuft sie als wahrscheinlich ein. Es sind Beobachtungsdaten — ein Vergleich zwischen Gruppen, keine Vorher-Nachher-Messung bei dir.",q:"Tong et al. 2019, BMJ; Dybvik et al. 2023, Eur J Nutr (RR 0,79)"},
+{d:4200,k:"body",t:"Ein unterschätzter Gewinn: Divertikelkrankheit",b:"Darüber spricht kaum jemand, dabei bringt sie viele Menschen ins Krankenhaus. In EPIC-Oxford hatten Vegetarier über 11,6 Jahre ein um rund ein Drittel niedrigeres Risiko, deswegen eingewiesen zu werden, wobei Ballaststoffe unabhängig davon zusätzlich halfen.",q:"Crowe et al. 2011, BMJ — EPIC-Oxford, n=47.033"},
+{d:5475,k:"habit",t:"Fünfzehn Jahre",b:"Die meisten Dinge, die Menschen anfangen, laufen nicht so lange. In dieser Größenordnung bedeutet kein Abzeichen mehr viel — aber wenn du damit angefangen hast in der Hoffnung, dass es unauffällig wird, dann ist es das, und das war immer die Siegbedingung.",q:"Deine eigenen Zahlen"},
+{d:6570,k:"body",t:"Auch die unbequeme Zahl: Schlaganfall",b:"Dieselbe Studie, die zehn Fälle Herzkrankheit weniger zeigt, fand bei Vegetariern auch rund 20 Prozent mehr Schlaganfälle, überwiegend Hirnblutungen. Eine Meta-Analyse über zwölf Kohorten fand diesen Effekt nicht. Du liest das hier, damit du es nicht zuerst als Vorwurf hörst.",q:"Tong et al. 2019, BMJ (HR 1,20); Dybvik et al. 2023 (RR 0,90, n.s.)"},
+{d:7300,k:"animals",t:"Zwanzig Jahre",b:"Ein paar hundert Landtiere, fast alles Masthühner. Ein ganzes Rind wirst du in dieser App vermutlich nie sehen — ein Tier liefert rund 150 kg Fleisch ohne Knochen, das dauert bei durchschnittlichem Verzehr an die fünfzehn Jahre. Beim Rind stecken die Kilos, beim Huhn die Tiere.",q:"FAO-Produktionsstatistik; eigene Rechnung"}
+],
+nudges:[
+"Rote Linsen zerfallen beim Kochen und schmecken herzhaft. Bolognese ohne Umweg.",
+"Zitrone über die Linsen — das Vitamin C hilft dir beim Eisen.",
+"Probier den Kaffee heute mal eine halbe Stunde nach dem Essen statt dazu.",
+"Eine kleine Handvoll Nüsse, etwa 25 g. Das ist ohnehin Standardempfehlung.",
+"Hummus mit Paprikastreifen aufs Brot. Die Paprika schließt das Eisen der Kichererbsen auf.",
+"Kichererbsen statt Hähnchen im Curry: gleiche Sauce, gleiche Gewürze.",
+"Kidneybohnen oder Räuchertofu statt Thunfisch im Salat. Beides bringt Biss.",
+"Rapsöl statt Sonnenblumenöl im Dressing. Besseres Omega-3-Verhältnis, kein Cent mehr.",
+"Heute nichts geplant? Rote Linsen, Dose Tomaten, Kreuzkümmel. Zwanzig Minuten.",
+"Sauerteigbrot hilft — es baut das Phytat ab, das Eisen und Zink bindet.",
+"Trockene Hülsenfrüchte kosten etwa ein Viertel der Dosenware. Ein Topf am Sonntag reicht die Woche.",
+"Miso oder Hefeflocken in die Brühe. Der Umami-Trick für herzhafte Tiefe.",
+"Wenn der Bauch die ersten Wochen protestiert: langsam steigern, gut kauen, genug trinken.",
+"22 von 30 ist ein guter Monat. Kein Monat mit acht Fehlern.",
+"Deine Gesamtzahl sinkt nie. Egal was gestern war.",
+"Das 30-Tage-Fenster erholt sich von selbst. Du musst es nicht retten.",
+"Ein Steak macht nichts rückgängig. Die Evidenz handelt von Mustern über Wochen, nicht von Mahlzeiten.",
+"Gestern war Fleisch dabei? Heute ist ein neuer Teller. Mehr passiert hier nicht.",
+"Ein Masthuhn sind rund 1,2 kg. Deshalb bewegt sich der Tierzähler beim Geflügel am schnellsten.",
+"Beim Rind stecken die Kilos, beim Huhn die Tiere. Die beiden Zahlen zeigen in verschiedene Richtungen.",
+"Käse ist Genuss, kein Fleischersatz. Pro Kilo kostet er mehr als Schwein.",
+"Tipp auf eine Zahl. Dahinter steht, woher sie kommt und was sie nicht sagt.",
+"Du musst niemanden überzeugen. Dein Teller argumentiert leiser als du.",
+"Der beste Spartipp hat wenig mit Fleischverzicht zu tun: selbst kochen.",
+"Wenn du keine Lust auf Zahlen hast: eintragen und weggehen. Das reicht völlig."
+],
+nutrition:[
+{h:"Eisen",b:"Pflanzliches Eisen wird schlechter aufgenommen als Eisen aus Fleisch. Vitamin C in derselben Mahlzeit verbessert das deutlich, Kaffee und schwarzer Tee verschlechtern es. Gute Quellen: Hülsenfrüchte, Haferflocken, Kürbiskerne, Hirse. Die Referenzwerte liegen bei rund 16 mg am Tag für menstruierende Frauen und 11 mg für Männer. Lass Ferritin nach einem halben Jahr prüfen, am besten zusammen mit CRP, weil Entzündungen den Wert nach oben verfälschen."},
+{h:"Vitamin B12",b:"Eier und Milchprodukte decken es meist, aber oft knapp: Lakto-ovo-Vegetarier liegen im Schnitt deutlich unter Fleischessern, und ein kleiner Teil liegt im Mangelbereich. Wenn du wenig Eier und Milch isst, lass Holo-Transcobalamin bestimmen statt nur Serum-B12 — das zeigt einen Mangel früher an."},
+{h:"Jod",b:"Seefisch war eine der wichtigsten Quellen, und die fällt jetzt weg. Nimm jodiertes Speisesalz — das ist der einfachste Hebel. In Ländern mit Jodsalzprogrammen reicht das meist; wo es keine gibt, lohnt die Nachfrage. Algen sind wirksam, aber extrem schwankend dosiert."},
+{h:"Omega-3",b:"Ohne Fisch fallen EPA und DHA weg. Leinsamen, Walnüsse und Rapsöl liefern ALA, aber der Körper wandelt davon nur wenige Prozent um, bei Männern noch weniger. Algenöl mit rund 250 mg EPA plus DHA am Tag ist die einzige direkte Quelle, die bleibt. Kein Muss — aber wenn du es nimmst, gehören die Kosten in deine Geld-Kachel."},
+{h:"Zink und Selen",b:"Phytat aus Vollkorn und Hülsenfrüchten bindet Zink, deshalb liegt der Bedarf höher als bei Fleischessern. Einweichen, Keimen und Sauerteiggärung bauen Phytat ab und verbessern Zink und Eisen zugleich. Selen hängt stark von den Böden ab; Vollkorn, Hülsenfrüchte und Eier tragen bei."},
+{h:"Protein",b:"Selten ein echtes Problem. Rund 0,8 g pro Kilo Körpergewicht sind der Referenzwert für Erwachsene, ab 65 etwa 1,0 und bei hartem Training mehr. Hülsenfrüchte und Getreide ergänzen sich, und das muss nicht in derselben Mahlzeit passieren — über den Tag verteilt genügt."},
+{h:"Die Käse-Falle",b:"Der häufigste Anfängerfehler ist, Fleisch durch Käse und Fertiggerichte zu ersetzen. Das bringt gesundheitlich wenig, klimatisch wenig — Käse gehört pro Kilo zu den schwersten nicht-tierischen Posten überhaupt — und finanziell gar nichts. Hülsenfrüchte sind der Kern einer vegetarischen Ernährung, nicht die Beilage."},
+{h:"Schwangerschaft, Kinder, höheres Alter, Leistungssport",b:"Für Schwangerschaft und Stillzeit, für Kinder und Jugendliche, für ältere Menschen und für ernsthaften Sport gelten deutlich andere Anforderungen. Eine gut geplante vegetarische Ernährung funktioniert in all diesen Fällen, aber die Spielräume sind kleiner. Dafür lohnt ein Gespräch mit einer Fachperson statt Raten."}
+],
+caveats:[
+{h:"Warum wir nicht „gerettet“ schreiben",b:"Weniger Nachfrage senkt die Produktion, aber nicht eins zu eins. Die Agrarökonomie beziffert es auf grob 0,7 weniger produzierte Tiere je nicht gekauftem Tier — der Rest wird über Preis- und Substitutionseffekte aufgefangen. Deutlich unter eins, deutlich über null. Es wirkt, nur nicht als Rechnung mit einzelnen Tieren. Deshalb steht hier „Tiere, die du nicht gegessen hast“ und nicht „gerettete Tiere“."},
+{h:"Vegetarisch ist nicht tierfrei",b:"Wer weiter Eier und Milch isst, hat weiter Tiere im Bild. Legehennen werden nach rund 18 Monaten geschlachtet; Milchkühe geben nur Milch, weil sie kalben, und ihre männlichen Kälber gehen in die Kalb- oder Rindermast. Dein Tierzähler misst, was du nicht gegessen hast. Er behauptet nicht, dass niemand mehr betroffen ist."},
+{h:"Was die Wasserzahl nicht sagt",b:"Diese App zählt Süßwasserentnahme — Wasser, das tatsächlich aus Flüssen, Seen und Grundwasser entnommen wird. Das ist bewusst so. Die berühmten „15.000 Liter je Kilo Rind“ sind überwiegend grünes Wasser: Regen, der ohnehin auf diese Weide gefallen wäre. Die Entnahme zu zählen kehrt die Reihenfolge um: Rind fällt unter Schwein, und Käse und Nüsse steigen über jedes Fleisch. Es bedeutet aber auch, dass ein Liter in Andalusien und einer in Irland hier gleich zählen, und das ist in jeder Hinsicht falsch, die vor Ort zählt. Wasserknappheit ist regional; ein globaler Durchschnitt kann das nicht ausdrücken."},
+{h:"Käse ist kein Fleischersatz",b:"Je Kilogramm proteinbezogenem Ersatz trägt Käse rund 29 kg CO₂e und die mit Abstand höchste Süßwasserentnahme und Flächennutzung von allem in dieser App. Ersetz Rind durch Käse, und du gewinnst trotzdem viel. Ersetz Schwein oder Huhn durch Käse, und deine Klima-Kachel darf zu Recht null oder eine negative Zahl zeigen. Das ist die Rechnung, kein Fehler."},
+{h:"Intervention oder Beobachtung?",b:"Hinter diesen Zahlen stehen zwei Arten von Studien, und sie sagen etwas sehr Verschiedenes. Interventionsstudien geben eine Kost vor und messen vorher und nachher — daher stammen Blutdruck, Blutfette und TMAO, und sie erlauben kausale Deutung. Kohortenstudien vergleichen Gruppen, die sich schon vorher unterschieden — daher stammt jeder Langzeitbefund zu Herz, Krebs und Sterblichkeit. Die sagen: Menschen, die so essen, haben seltener X. Nicht: Wenn du so isst, bekommst du seltener X."},
+{h:"Healthy-User-Bias — die Zahl, die alles relativiert",b:"In EPIC-Oxford lag die standardisierte Sterblichkeit der gesamten Kohorte bei etwa der Hälfte der landesüblichen Rate — bei Vegetariern und Fleischessern identisch. Wer sich freiwillig für Ernährungskohorten meldet, raucht weniger, bewegt sich mehr, ist gebildeter und geht häufiger zum Arzt. Ein unbekannter, aber sicher relevanter Teil jeder schmeichelhaften Kohortenzahl gehört diesen Gewohnheiten und nicht dem Essen. Das entwertet die Studien nicht, aber es begrenzt, was du für dich daraus mitnehmen kannst."},
+{h:"Was diese App über sich selbst weiß",b:"In der Cochrane-Übersicht zum Rauchstopp wirkten automatisierte Textnachrichten deutlich; Apps als solche zeigten keinen messbaren Effekt bei sehr niedriger Evidenzsicherheit. Gewirkt haben Selbstbeobachtung und Wenn-Dann-Pläne, nicht Punkte und Abzeichen. Und Rauchstopp ist binär, Essen nicht: mehrmals täglich, sozial, ohne sinnvollen Nullpunkt. Uns ist keine randomisierte Studie zu einer Fleischreduktions-App mit gemessenen Langzeitendpunkten bekannt. Diese App ist eine gut begründete Wette, keine belegte Methode."},
+{h:"Die Fischzahlen sind die wackligsten hier",b:"Das Durchschnittsgewicht eines Speisefisches lässt sich nur schätzen: Zwischen Hering und Zuchtlachs liegt Faktor 25. Wir nehmen einen mittleren Wert und sagen das dazu. Beifang steckt mit rund einem Zehntel des Anlandegewichts im Tierzähler, was überproportional viele Individuen ergibt, weil diese Tiere kleiner sind. Nicht gezählt: die Wildfische, die zu Futter für Zuchtlachs und Garnelen verarbeitet werden — eine große Menge, die wir nicht belastbar beziffern können. Und die CO₂-Zahl sagt nichts über Überfischung und Meeresböden, also über die eigentlichen ökologischen Probleme beim Fisch."},
+{h:"Globale Durchschnitte verbergen viel",b:"Jede Umweltzahl hier ist ein globaler Median aus einem Datensatz. Reale Fußabdrücke schwanken enorm — Rind von einer gerodeten Weide und Rind aus einer Milchviehherde unterscheiden sich um etwa den Faktor drei, und dasselbe gilt zwischen Regionen und Haltungssystemen. Dein eigener Einkaufskorb ist nicht der Median. Nimm diese Kacheln als Größenordnungen, nicht als Messwerte, und vertrau der Richtung deutlich mehr als der Höhe."},
+{h:"Zahlen, die wir bewusst nicht verwenden",b:"„Rund 1.100 Tiere pro Menschenleben“ — die einzelnen Posten lassen sich mit heutigen Daten nicht nachvollziehen. „Verarbeitetes Fleisch ist in derselben Kategorie wie Tabak“ — formal richtig und gründlich irreführend, weil die IARC-Gruppe beschreibt, wie sicher ein Zusammenhang ist, nicht wie groß das Risiko. „21 Tage machen eine Gewohnheit“ — steht in keiner Studie. „Du hast X Bäume kompensiert“ — Einzelbaumwerte schwanken um den Faktor fünf, und mehrere große Wälder sind zuletzt zur Netto-Kohlenstoffquelle geworden. „Du lebst X Tage länger“ — dafür gibt es keine belastbare Grundlage."},
+{h:"Warum hier nichts auf null springt",b:"In der bekanntesten Gewohnheitsstudie senkte eine einzelne ausgelassene Gelegenheit die Automatisierung um weniger als einen halben Skalenpunkt und wurde schnell aufgeholt. Aus der Suchtforschung kommt zusätzlich die Idee, dass nicht der Ausrutscher den Versuch beendet, sondern die Bewertung danach — geprüft allerdings an Rauchenden und an Menschen mit gezügeltem Essverhalten, nicht an Leuten, die weniger Fleisch essen. Wir halten es trotzdem für das kleinere Risiko, keinen Zähler auf null springen zu lassen. Das ist eine Konstruktionsentscheidung, kein Studienergebnis."},
+{h:"Das Kleingedruckte",b:"Diese App gibt keine ärztliche oder ernährungstherapeutische Beratung, stellt keine Diagnosen, nennt keine Dosierungen und berechnet kein persönliches Risiko. Wenn du Blutdrucksenker oder Antidiabetika nimmst, kann eine Ernährungsumstellung deine Werte spürbar verändern — ein Grund, die Ärztin einzubeziehen, kein Grund, es zu lassen, und nie ein Grund, Medikamente selbst anzupassen. Jede Zahl hier ist eine Schätzung auf Basis von Durchschnitten: deiner eigenen Angabe, Produktionsstatistiken und Ökobilanzen. Wenn das Nachdenken über Essen zwanghaft oder angstbesetzt wird, kann das ein Warnzeichen sein — diese App zeigt keine Kalorien und kein Körpergewicht, und sie wegzulegen ist jederzeit erlaubt."}
+]
+};
+
+const LOCALES = { en:EN, de:DE };
+
+/* ══════════════════════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════════════════════ */
+
+const KEY = "meatless-since-v5";
+let T = EN;
+
+const nf = (a,b) => new Intl.NumberFormat(T.locale, {minimumFractionDigits:a, maximumFractionDigits:b===undefined?a:b});
+const cur = () => (COUNTRIES[S && S.country] || COUNTRIES.US).cur;
+const iso = d => { const z = new Date(d); return z.getFullYear()+"-"+String(z.getMonth()+1).padStart(2,"0")+"-"+String(z.getDate()).padStart(2,"0"); };
+const midnight = s => { const p = String(s).split("-"); return new Date(+p[0], +p[1]-1, +p[2]).getTime(); };
+
+/* While the setup sheet is open the draft's units win, so the sliders
+   switch the moment you pick, not once you finish. */
+let unitsPreview = null;
+function U(){ return UNITS[unitsPreview || (S && S.units) || "metric"]; }
+const mass  = kg => nf(1).format(kg * U().mass.f) + " " + U().mass.u;
+const small = g  => nf(0).format(g * U().small.f) + " " + U().small.u;
+const dist  = km => nf(0).format(km * U().dist.f) + " " + U().dist.u;
+
+/* Starting point before anyone has chosen anything. Only the US is
+   assumed imperial; everything else starts metric. Language stays English
+   until the user picks — that is deliberate, not an oversight. */
+function guessDefaults(){
+  let country = "GLOBAL", units = "metric";
+  try{
+    const tag = (navigator.language || "en-US");
+    const region = (tag.split("-")[1] || "").toUpperCase();
+    if(region === "US"){ country = "US"; units = "imperial"; }
+    else if(["DE","AT","CH"].indexOf(region) >= 0){ country = "DE"; }
+  }catch(e){}
+  return { country, units };
+}
+
+function demoState(){
+  const g = guessDefaults();
+  const st = new Date(Date.now() - 152*864e5);
+  const e = {};
+  for(let i=0;i<34;i++){
+    const d = iso(new Date(Date.now() - i*864e5));
+    if(i===8) e[d] = {typ:"meat", art:"beef", g:220, note:"Birthday dinner"};
+    else if(i===3 || i===17) e[d] = {typ:"eggdairy"};
+    else if(i===11) e[d] = {typ:"unknown"};
+    else if(i!==22 && i!==23) e[d] = {typ:"plant"};
+  }
+  return { v:6, demo:true, lang:"en", country:g.country, units:g.units,
+           start:iso(st), w:Object.assign({}, COUNTRIES[g.country].w),
+           mix:Object.assign({}, MIX_DEFAULT), focus:"animals",
+           prices:{meat:{}, subs:{}}, entries:e, floor:{}, updatedAt:0 };
+}
+
+let S = demoState();
+let dbRef = null, syncKey = "checking", saveTimer = null;
+
+function loadLocal(){
+  try{ const raw = localStorage.getItem(KEY) || localStorage.getItem("meatless-since-v4");
+       if(!raw) return null;
+       const o = JSON.parse(raw); return (o && o.start) ? o : null; }catch(e){ return null; }
+}
+
+/* Earlier versions used German keys and a laying-hen field. Remap, don't drop. */
+const OLD_MEAT = { rind:"beef", schweinWurst:"pork", gefluegel:"poultry", fisch:"fish" };
+const OLD_SUB  = { huelsen:"pulses", tofu:"tofu", ei:"eggs", kaese:"cheese", ersatz:"mock", nuesse:"nuts" };
+const OLD_TYPE = { pflanzlich:"plant", eimilch:"eggdairy", fisch:"fish", fleisch:"meat", unbekannt:"unknown" };
+function migrate(o){
+  const out = Object.assign({}, o);
+  if(o.w && o.w.rind !== undefined){
+    const w = {}; for(const k in OLD_MEAT) if(o.w[k] !== undefined) w[OLD_MEAT[k]] = o.w[k];
+    out.w = w;
+  }
+  const oldMix = o.mix && o.mix.huelsen !== undefined ? o.mix : o.ersatzMix;
+  if(oldMix && oldMix.pulses === undefined){
+    const m = {}; for(const k in OLD_SUB) if(oldMix[k] !== undefined) m[OLD_SUB[k]] = oldMix[k];
+    out.mix = m;
+  }
+  const src = o.entries || o.eintraege;
+  if(src){
+    const en = {};
+    for(const d in src){
+      const e = Object.assign({}, src[d]);
+      if(OLD_TYPE[e.typ]) e.typ = OLD_TYPE[e.typ];
+      if(OLD_MEAT[e.art]) e.art = OLD_MEAT[e.art];
+      if(e.was && !e.note){ e.note = e.was; delete e.was; }
+      en[d] = e;
+    }
+    out.entries = en;
+  }
+  if(o.motiv !== undefined && o.focus === undefined)
+    out.focus = ({tiere:"animals", co2:"co2", geld:"money", kg:"weight"})[o.motiv] || "animals";
+  if(out.focus === "hens") out.focus = "animals";
+  delete out.eier; delete out.eggs;
+  if(!out.country) out.country = "DE";
+  /* Up to v5 the substitute prices people typed were per kilo of MEAT REPLACED.
+     From v6 the editor asks for the shelf price of the product itself, so divide
+     the stored figure back out. Without this, saved prices would silently shift
+     by the `buy` factor. */
+  if((o.v || 0) < 6 && out.prices && out.prices.subs){
+    const s = {};
+    for(const k in out.prices.subs){
+      if(SUBS[k] && typeof out.prices.subs[k] === "number") s[k] = out.prices.subs[k] / SUBS[k].buy;
+    }
+    out.prices = { meat:(out.prices.meat || {}), subs:s };
+  }
+  return out;
+}
+
+function normalize(raw){
+  const o = migrate(raw);
+  const base = demoState();
+  const s = Object.assign(base, o, {demo:false});
+  s.w = Object.assign({}, base.w, o.w || {});
+  s.mix = Object.assign({}, MIX_DEFAULT, o.mix || {});
+  s.entries = o.entries || {};
+  s.floor = o.floor || {};
+  s.prices = { meat:(o.prices && o.prices.meat) || {}, subs:(o.prices && o.prices.subs) || {} };
+  if(!COUNTRIES[s.country]) s.country = "US";
+  if(!UNITS[s.units]) s.units = COUNTRIES[s.country].units;
+  if(!LOCALES[s.lang]) s.lang = "en";
+  s.v = 6;
+  return s;
+}
+function commit(){
+  S.demo = false; S.updatedAt = Date.now();
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  if(dbRef){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{
+      dbRef.set(JSON.parse(JSON.stringify(S))).then(()=>setSync("synced")).catch(()=>setSync("local"));
+    }, 400);
+  }
+  render();
+}
+function setSync(k){ syncKey = k; const el = document.getElementById("syncLine");
+  if(el) el.innerHTML = esc(T.ui.storage)+": <b>"+esc(T.ui.sync[k] || k)+"</b>"; }
+
+(function boot(){
+  const local = loadLocal();
+  if(local) S = normalize(local);
+  T = LOCALES[S.lang] || EN;
+  try{ const th = localStorage.getItem(KEY+"-theme"); if(th) document.documentElement.setAttribute("data-theme", th); }catch(e){}
+})();
+
+if(window.claude && typeof window.claude.use === "function"){
+  window.claude.use("db").then(db=>{
+    if(!db){ setSync("local"); return; }
+    dbRef = db.doc("tracker/profile");
+    dbRef.onSnapshot(snap=>{
+      if(!snap.exists){ setSync(S.demo ? "ready" : "synced"); if(!S.demo) commit(); return; }
+      const d = snap.data();
+      if(d && typeof d.updatedAt === "number" && d.updatedAt > (S.updatedAt||0)){
+        S = normalize(d); T = LOCALES[S.lang] || EN;
+        try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+        render();
+      }
+      setSync("synced");
+    }, ()=> setSync("local"));
+  }).catch(()=> setSync("local"));
+} else { setSync("local"); }
+
+/* ══════════════════════════════════════════════════════════════════════
+   MATH
+   ══════════════════════════════════════════════════════════════════════ */
+
+function meatPrice(a){
+  const o = S.prices && S.prices.meat && S.prices.meat[a];
+  return (o === 0 || o) ? o : MEAT[a].price[S.country || "US"];
+}
+/* Shelf price per kilo of the product itself — this is what the editor shows. */
+function subPrice(k){
+  const o = S.prices && S.prices.subs && S.prices.subs[k];
+  return (o === 0 || o) ? o : SUBS[k].shop[S.country || "US"];
+}
+/* What that works out to per kilo of meat replaced — this is what the maths uses. */
+const subCostPerKgMeat = k => subPrice(k) * SUBS[k].buy;
+
+function mixValues(mix){
+  const m = mix || MIX_DEFAULT;
+  let sum = 0;
+  for(const k in SUBS) sum += Math.max(0, m[k] || 0);
+  if(sum <= 0) return { co2:SUBS.pulses.co2, land:SUBS.pulses.land, water:SUBS.pulses.water,
+                        price:subCostPerKgMeat("pulses"), shares:[{k:"pulses", p:100}] };
+  const out = {co2:0, land:0, water:0, price:0, shares:[]};
+  for(const k in SUBS){
+    const p = Math.max(0, m[k] || 0) / sum;
+    if(p <= 0) continue;
+    out.co2 += SUBS[k].co2 * p; out.land += SUBS[k].land * p;
+    out.water += SUBS[k].water * p; out.price += subCostPerKgMeat(k) * p;
+    out.shares.push({k, p:Math.round(p*100)});
+  }
+  out.shares.sort((a,b)=>b.p-a.p);
+  return out;
+}
+const mixLabel = mv => mv.shares.map(s=>T.ui.subNames[s.k]+" "+s.p+"%").join(" · ");
+
+/* Average CO2e saved per kilo of meat, given a meat composition and a
+   replacement mix. Only used as a ratio against the reference case, so it
+   modulates the measured level without setting it. */
+function netPerKg(w, mv){
+  let sum = 0, acc = 0;
+  for(const a in MEAT) sum += (w[a] || 0);
+  if(sum <= 0) return 0;
+  for(const a in MEAT) acc += ((w[a] || 0) / sum) * (MEAT[a].co2 - mv.co2);
+  return acc;
+}
+
+function computeAt(nowMs){
+  const startMs = midnight(S.start);
+  const ms = Math.max(0, nowMs - startMs);
+  const weeks = ms / 6048e5, days = ms / 864e5;
+  const country = S.country || "US";
+
+  const logged = {beef:0, pork:0, poultry:0, fish:0};
+  let vegTotal = 0;
+  for(const d in S.entries){
+    if(d < S.start) continue;
+    const e = S.entries[d];
+    if(e.typ === "meat"){ logged[logged[e.art] !== undefined ? e.art : "pork"] += (e.g || K.portionG)/1000; }
+    else if(e.typ === "fish"){ logged.fish += (e.g || K.portionG)/1000; }
+    else if(e.typ === "plant" || e.typ === "eggdairy"){ vegTotal++; }
+  }
+
+  const kg = {}; let kgSum = 0;
+  for(const a in MEAT){ kg[a] = Math.max(0, (S.w[a]||0)/1000*weeks - logged[a]); kgSum += kg[a]; }
+
+  const kgChicken = kg.poultry * POULTRY_MIX.chicken, kgTurkey = kg.poultry * POULTRY_MIX.turkey;
+  const landedKg = kg.fish * FISH.filletToLanded;
+  const byWeight = landedKg * FISH.bycatchRatio;
+  const byArt = {
+    chicken: kgChicken / YIELD.chicken, turkey: kgTurkey / YIELD.turkey,
+    pig: kg.pork / YIELD.pig, cattle: kg.beef / YIELD.cattle,
+    fish: landedKg * FISH.perKgLanded, bycatch: byWeight * FISH.bycatchPerKg
+  };
+  const animals = byArt.chicken + byArt.turkey + byArt.pig + byArt.cattle + byArt.fish + byArt.bycatch;
+
+  const e = mixValues(S.mix);
+  let water = 0, area_ = 0;
+  for(const a in MEAT){
+    water += kg[a] * (MEAT[a].water - e.water);
+    area_ += kg[a] * (MEAT[a].land  - e.land);
+  }
+
+  /* Climate: the measured curve sets the level, the bottom-up net-per-kilo
+     only scales it, so the replacement mix still moves this number. Logged
+     meat days reduce it in the same proportion as they reduce the kilos. */
+  let grossKg = 0;
+  for(const a in MEAT) grossKg += (S.w[a] || 0)/1000 * weeks;
+  const loggedFactor = grossKg > 0 ? kgSum / grossKg : 1;
+  const meatGPerDay = ((S.w.beef||0) + (S.w.pork||0) + (S.w.poultry||0)) / 7;
+  const refNet = netPerKg(COUNTRIES[country].w, mixValues(MIX_DEFAULT));
+  const co2PerYear = measuredDailySaving(meatGPerDay) * 365 *
+                     (refNet !== 0 ? netPerKg(S.w, e) / refNet : 1);
+  const co2 = co2PerYear * (days / 365) * loggedFactor;
+  let meatSpend = 0;
+  for(const a in MEAT) meatSpend += (kg[a] || 0) * meatPrice(a);
+  const money = (meatSpend - kgSum * e.price) * K.homeShare;
+
+  /* Gross per-day rates. Quantity milestones derive their day from these
+     instead of carrying a hard-coded one, so they can never drift out of
+     step with the counters again. */
+  const kgDay = {}; let kgDaySum = 0, spendDay = 0;
+  for(const a in MEAT){ kgDay[a] = (S.w[a]||0)/1000/7; kgDaySum += kgDay[a]; spendDay += kgDay[a] * meatPrice(a); }
+  const rates = {
+    co2:     co2PerYear / 365,
+    money:   (spendDay - kgDaySum * e.price) * K.homeShare,
+    chicken: kgDay.poultry * POULTRY_MIX.chicken / YIELD.chicken,
+    pig:     kgDay.pork / YIELD.pig
+  };
+
+  let winVeg = 0, winLogged = 0;
+  const dots = [];
+  for(let i = K.windowDays-1; i >= 0; i--){
+    const d = iso(new Date(nowMs - i*864e5));
+    const en = (d >= S.start) ? S.entries[d] : undefined;
+    let t = "empty";
+    if(en){
+      winLogged++;
+      if(en.typ === "plant" || en.typ === "eggdairy"){ t = "veg"; winVeg++; }
+      else if(en.typ === "fish") t = "fish";
+      else if(en.typ === "meat") t = "meat";
+      else t = "unknown";
+    }
+    dots.push({d, t, today: i === 0});
+  }
+  const yest = iso(new Date(nowMs - 864e5)), today = iso(new Date(nowMs));
+  const comeback = S.entries[yest] && S.entries[yest].typ === "meat" && !S.entries[today];
+
+  const raw = { ms, days, weeks, kg, kgSum, animals, byArt, byWeight,
+    co2, water, area:area_, money,
+    vegTotal, winVeg, winLogged, dots, comeback, rates, e };
+
+  const fl = S.floor || {};
+  raw.animals = Math.max(raw.animals, fl.animals || 0);
+  raw.kgSum = Math.max(raw.kgSum, fl.kgSum || 0);
+  raw.money = Math.max(raw.money, fl.money === undefined ? -Infinity : fl.money);
+  raw.vegTotal = Math.max(raw.vegTotal, fl.vegTotal || 0);
+  if(raw.co2 >= 0) raw.co2 = Math.max(raw.co2, fl.co2 || 0);
+  if(raw.water >= 0) raw.water = Math.max(raw.water, fl.water || 0);
+  if(raw.area >= 0) raw.area = Math.max(raw.area, fl.area || 0);
+  return raw;
+}
+const compute = () => computeAt(Date.now());
+
+function setFloor(){
+  const c = computeAt(Date.now());
+  S.floor = { animals:c.animals, kgSum:c.kgSum, money:c.money, co2:c.co2,
+              water:c.water, area:c.area, vegTotal:c.vegTotal };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TILES — computation here, wording in the locale
+   ══════════════════════════════════════════════════════════════════════ */
+
+const TILES = [
+{ id:"animals",
+  val:c=>nf(2).format(c.animals),
+  unitOf:()=>T.tiles.animals.unit,
+  foot:c=>'<div class="bd">'+
+    [["chicken", nf(2).format(c.byArt.chicken)], ["turkey", nf(2).format(c.byArt.turkey)],
+     ["pig", nf(2).format(c.byArt.pig)], ["cattle", nf(2).format(c.byArt.cattle)],
+     ["fish", nf(1).format(c.byArt.fish)], ["bycatch", nf(1).format(c.byArt.bycatch)]
+    ].map(x=>'<div><span>'+esc(T.ui.animalNames[x[0]])+'</span><b>'+x[1]+'</b></div>').join("")+'</div>' },
+{ id:"weight", val:c=>nf(1).format(c.kgSum * U().mass.f), unitOf:()=>U().mass.u },
+{ id:"co2", val:c=>nf(0).format(c.co2 * U().mass.f), unitOf:()=>U().mass.u+" CO₂e" },
+{ id:"water", val:c=>nf(0).format(c.water * U().vol.f), unitOf:()=>U().vol.u },
+{ id:"area", val:c=>nf(0).format(c.area * U().area.f), unitOf:()=>U().area.u+"·yr" },
+{ id:"money", val:c=>nf(2).format(c.money), unitOf:()=>cur() },
+{ id:"days", val:c=>nf(0).format(c.vegTotal), unitOf:()=>T.tiles.days.unit }
+];
+
+/* Everything a locale's eq() might need, precomputed. */
+function eqCtx(c){
+  const a = c.area * U().area.f;
+  const fp = COUNTRIES[S.country||"US"].footprint;
+  return { n0:x=>nf(0).format(x), n1:x=>nf(1).format(x), n2:x=>nf(2).format(x),
+           small, mass, dist, cur:cur(),
+           tubs:(c.water*U().vol.f)/U().tub, pitches:a/U().pitch, spots:a/U().spot,
+           share:c.days > 14 ? (c.co2/c.days*365)/fp*100 : null };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════════════════════════════ */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dfmt = () => new Intl.DateTimeFormat(T.locale, {day:"2-digit", month:"short", year:"numeric"});
+const dshort = () => new Intl.DateTimeFormat(T.locale, {day:"2-digit", month:"2-digit"});
+
+let currentView = "today";
+
+function renderChrome(){
+  const u = T.ui;
+  $("#brand1").textContent = u.brand1;
+  $("#brand2").textContent = u.brand2;
+  $("#tabs").innerHTML = ["today","journey","nutrition","caveats","you"].map(v=>
+    '<button role="tab" data-view="'+v+'" aria-selected="'+(v===currentView)+'">'+esc(u.tabs[v])+'</button>').join("");
+  /* Once real data exists the banner is not hidden, it stops existing. */
+  const banner = $("#demoBanner");
+  banner.hidden = !S.demo;
+  banner.style.display = S.demo ? "" : "none";
+  banner.innerHTML = S.demo
+    ? '<b>'+esc(u.demoBold)+'</b> '+esc(u.demoText)+'<button id="startSetup">'+esc(u.demoBtn)+'</button>'
+    : "";
+  $("#roLabel").textContent = u.roLabel;
+  $("#logBtn").textContent = u.logCta;
+}
+
+function renderReadout(c){
+  const u = T.ui, d = Math.floor(c.days), rest = c.ms - d*864e5;
+  const p2 = n => String(Math.floor(n)).padStart(2,"0");
+  $("#cDays").innerHTML = nf(0).format(d) + '<small>' + (d===1?u.day:u.days) + '</small>';
+  $("#cHms").textContent = p2(rest/36e5)+":"+p2(rest%36e5/6e4)+":"+p2(rest%6e4/1000);
+  $("#roFoot").innerHTML =
+    '<div>'+esc(u.since)+' <b>'+dfmt().format(new Date(midnight(S.start)))+'</b></div>'+
+    '<div>'+esc(u.meatFree)+' <b>'+nf(0).format(c.vegTotal)+'</b></div>'+
+    '<div>'+esc(u.last30)+' <b>'+c.winVeg+' '+esc(u.of)+' '+c.winLogged+'</b></div>';
+}
+
+function renderTiles(c){
+  const f = eqCtx(c);
+  const order = TILES.slice().sort((a,b)=> (b.id === S.focus) - (a.id === S.focus));
+  $("#tiles").innerHTML = order.map((t,i)=>{
+    const L = T.tiles[t.id], unit = t.unitOf ? t.unitOf() : "";
+    return '<div class="tile'+(i===0?" lead":"")+'">'+
+      '<button class="why" data-src="'+t.id+'" aria-label="'+esc(T.ui.whyAria)+'">?</button>'+
+      '<div class="k">'+esc(L.k)+'</div>'+
+      '<div class="v">'+t.val(c)+(unit?'<em>'+esc(unit)+'</em>':'')+'</div>'+
+      (t.foot ? t.foot(c) : '')+
+      '<div class="eq">'+esc(L.eq(c,f))+'</div></div>';
+  }).join("");
+}
+
+function renderStrip(c){
+  const u = T.ui;
+  $("#stripBox").innerHTML =
+    '<div class="strip-h"><h3>'+esc(u.stripTitle)+'</h3>'+
+    '<span class="n">'+esc(u.stripCount(c.winVeg, c.winLogged))+'</span></div>'+
+    '<div class="dots">'+ c.dots.map(d=>
+      '<button class="dot" data-t="'+d.t+'" data-today="'+(d.today?1:0)+'" data-day="'+d.d+'" '+
+      'aria-label="'+dshort().format(new Date(midnight(d.d)))+', '+esc(u.legend[d.t])+'"></button>').join("")+
+    '</div><div class="legend">'+ ["veg","fish","meat","unknown","empty"].map(k=>
+      '<span><i class="dot" data-t="'+k+'" style="border:1px solid var(--line-2)"></i>'+esc(u.legend[k])+'</span>').join("")+
+    '</div><p class="sec-p">'+esc(u.stripNote)+'</p>';
+}
+
+function renderBack(c){
+  if(!c.comeback){ $("#backBox").innerHTML = ""; return; }
+  const u = T.ui;
+  $("#backBox").innerHTML = '<div class="back"><h3>'+esc(u.backTitle)+'</h3>'+
+    '<p>'+u.backBody(nf(0).format(c.vegTotal), c.winVeg, c.winLogged)+'</p>'+
+    '<div class="row"><button class="btn" id="logBtn2">'+esc(u.backBtn)+'</button></div></div>';
+}
+
+/* Milestones that name a QUANTITY carry the threshold itself (`q`) and their
+   day is derived from your actual rate, so they always agree with the tiles.
+   Everything titled by time stays on the calendar — otherwise "Ten days in"
+   lands on day four. A threshold you are not on course for returns null and
+   drops out of the journey rather than dangling forever. */
+/* NB: `q` is the citation string on every milestone — the threshold lives on
+   `at` so the two cannot collide. */
+function scaled(m, c){
+  if(!m.at) return m.d;
+  const r = c.rates[m.at.m];
+  return (r > 0) ? m.at.v / r : null;
+}
+
+function renderNext(c){
+  const u = T.ui;
+  const list = T.milestones.map(m=>({m, d:scaled(m,c)})).filter(x=>x.d !== null).sort((a,b)=>a.d-b.d);
+  const next = list.find(x => x.d > c.days);
+  if(!next){ $("#nextBox").innerHTML = '<div class="lbl">'+esc(u.doneLabel)+'</div>'+
+    '<h3>'+esc(u.doneH)+'</h3><p>'+esc(u.doneP)+'</p>'; return; }
+  const prevs = list.filter(x => x.d <= c.days);
+  const from = prevs.length ? prevs[prevs.length-1].d : 0;
+  const pct = Math.max(0, Math.min(100, (c.days - from)/(next.d - from)*100));
+  const left = Math.ceil(next.d - c.days);
+  $("#nextBox").innerHTML =
+    '<div class="lbl">'+esc(u.nextLabel)+'</div><h3>'+esc(next.m.t)+'</h3><p>'+esc(next.m.b)+'</p>'+
+    '<div class="bar"><i style="width:'+pct.toFixed(1)+'%"></i></div>'+
+    '<div class="bar-foot"><span>'+esc(u.dayN(nf(0).format(Math.floor(c.days))))+'</span>'+
+    '<span>'+esc(u.expectedIn(nf(0).format(left), left===1?u.day:u.days))+'</span></div>';
+}
+
+function renderNudge(c){
+  $("#nudge").innerHTML = '<span class="mark">'+esc(T.ui.todayMark)+'</span><span>'+
+    esc(T.nudges[Math.floor(c.days) % T.nudges.length])+'</span>';
+}
+
+function renderJourney(c){
+  const u = T.ui;
+  const list = T.milestones.map(m=>({m, d:scaled(m,c)})).filter(x=>x.d !== null).sort((a,b)=>a.d-b.d);
+  const nextD = (list.find(x=>x.d > c.days)||{}).d;
+  $("#view-journey").innerHTML = '<div class="sec-h">'+esc(u.journeyH)+'</div>'+
+    '<p class="sec-p">'+esc(u.journeyP)+'</p>'+
+    '<div class="rail">'+ list.map(({m,d})=>{
+      const done = c.days >= d, isNext = d === nextD;
+      /* Days for the whole first stretch, so "66 days, not 21" is labelled
+         Day 66 rather than Week 9. */
+      const lab = d < 130 ? u.labDay(Math.round(d))
+                : d < 365 ? u.labMonth(Math.round(d/30.4)) : u.labYear(nf(1).format(d/365));
+      return '<div class="ms'+(done?" done":"")+(isNext?" now":"")+'">'+
+        '<div class="when">'+esc(lab)+'<span class="cat">'+esc(u.cats[m.k]||m.k)+'</span></div>'+
+        '<h4>'+esc(m.t)+'</h4><p>'+esc(m.b)+'</p><div class="src">'+esc(m.q)+'</div></div>';
+    }).join("") + '</div>';
+}
+
+function renderNutrition(){
+  const u = T.ui;
+  $("#view-nutrition").innerHTML = '<div class="sec-h">'+esc(u.nutriH)+'</div>'+
+    '<p class="lede">'+esc(u.nutriLede)+'</p>'+
+    T.nutrition.map(k=>'<div class="card"><h3>'+esc(k.h)+'</h3><p>'+esc(k.b)+'</p></div>').join("")+
+    '<div class="card"><p style="font-size:12.5px;color:var(--ink-3)">'+esc(u.nutriFoot)+'</p></div>';
+}
+
+function renderCaveats(){
+  const u = T.ui;
+  $("#view-caveats").innerHTML = '<div class="sec-h">'+esc(u.cavH)+'</div>'+
+    '<p class="lede">'+esc(u.cavLede)+'</p>'+
+    T.caveats.map(k=>'<div class="card honest"><span class="tag">'+esc(u.cavTag)+'</span>'+
+      '<h3>'+esc(k.h)+'</h3><p>'+esc(k.b)+'</p></div>').join("");
+}
+
+function priceRow(group, key, label, perKg){
+  const shown = (perKg / U().mass.f).toFixed(2);
+  const own = S.prices && S.prices[group] && S.prices[group][key] !== undefined;
+  return '<div class="price-row"><span'+(own?' class="own"':'')+'>'+esc(label)+
+    (own?' <small>'+esc(T.ui.yours)+'</small>':'')+'</span>'+
+    '<span class="pin">'+esc(cur())+'<input type="number" min="0" step="0.10" inputmode="decimal" '+
+    'data-price="'+group+':'+key+'" value="'+shown+'" aria-label="'+esc(label)+'"></span></div>';
+}
+
+function renderYou(c){
+  const u = T.ui, mu = U().mass.u;
+  const recent = Object.keys(S.entries).filter(d=>{
+    const t = S.entries[d].typ; return t === "meat" || t === "fish";
+  }).sort().reverse().slice(0,12);
+  const th = document.documentElement.getAttribute("data-theme") || "auto";
+  $("#view-you").innerHTML =
+    '<div class="sec-h">'+esc(u.setupH)+'</div>'+
+    '<div class="card"><dl class="kv">'+
+      '<dt>'+esc(u.kvSince)+'</dt><dd>'+dfmt().format(new Date(midnight(S.start)))+'</dd>'+
+      '<dt>'+esc(u.kvBefore)+'</dt><dd>'+mass(Object.values(S.w).reduce((a,b)=>a+b,0)/1000)+esc(u.perWeek)+'</dd>'+
+      '<dt>'+esc(u.kvRegion)+'</dt><dd>'+esc(u.countries[S.country])+'</dd>'+
+      '<dt>'+esc(u.kvInstead)+'</dt><dd>'+esc(mixLabel(c.e))+'</dd></dl>'+
+    '<div class="row" style="margin-top:14px"><button class="btn ghost" id="editAll">'+esc(u.change)+'</button></div>'+
+    '<p class="hint" style="margin:10px 0 0">'+esc(u.changeNote)+'</p></div>'+
+    '<div class="sec-h">'+esc(u.langH)+'</div><div class="card"><div class="chips">'+
+      Object.keys(LOCALES).map(l=>'<button class="chip" data-lang="'+l+'" aria-pressed="'+
+        (S.lang===l)+'">'+esc(LOCALES[l].nm)+'</button>').join("")+
+    '</div></div>'+
+    '<div class="sec-h">'+esc(u.unitsH)+'</div><div class="card"><div class="chips">'+
+      [["metric",u.unitMetric],["imperial",u.unitImperial]].map(x=>
+        '<button class="chip" data-units="'+x[0]+'" aria-pressed="'+(S.units===x[0])+'">'+esc(x[1])+'</button>').join("")+
+    '</div></div>'+
+    '<div class="sec-h">'+esc(u.pricesH)+'</div>'+
+    '<div class="card"><p class="hint" style="margin-bottom:12px">'+esc(u.pricesNote)+'</p>'+
+    '<p class="sub-head">'+esc(u.pricesMeat(mu))+'</p>'+
+    Object.keys(MEAT).map(a=>priceRow("meat", a, u.meatNames[a], meatPrice(a))).join("")+
+    '<p class="sub-head">'+esc(u.pricesSub(mu))+'</p>'+
+    Object.keys(SUBS).map(k=>priceRow("subs", k, u.subNames[k], subPrice(k))).join("")+
+    '<p class="hint" style="margin-top:10px">'+esc(u.pricesFoot(mu))+'</p>'+
+    '<div class="row" style="margin-top:14px"><button class="btn ghost" id="resetPrices">'+esc(u.pricesReset)+'</button></div></div>'+
+    (recent.length ? '<div class="sec-h">'+esc(u.mealsH)+'</div><div class="card">'+
+      recent.map(d=>{ const e = S.entries[d];
+        return '<div class="entry"><span class="d">'+dfmt().format(new Date(midnight(d)))+'</span>'+
+        '<span>'+(e.typ === "fish" ? esc(u.meatNames.fish) : esc(u.meatNames[e.art] || u.meatGeneric))+
+        (e.note ? " · "+esc(e.note) : "")+'</span>'+
+        '<span class="g">'+small(e.g || K.portionG)+'</span></div>'; }).join("")+
+      '<p class="hint" style="margin:12px 0 0">'+esc(u.mealsNote)+'</p></div>' : '')+
+    '<div class="sec-h">'+esc(u.appearH)+'</div><div class="card"><div class="chips">'+
+      [["auto",u.themeAuto],["light",u.themeLight],["dark",u.themeDark]].map(x=>
+        '<button class="chip" data-theme-set="'+x[0]+'" aria-pressed="'+(th===x[0])+'">'+esc(x[1])+'</button>').join("")+
+    '</div></div>'+
+    '<div class="sec-h">'+esc(u.dataH)+'</div><div class="card">'+
+    '<p id="syncLine">'+esc(u.storage)+': <b>'+esc(u.sync[syncKey] || syncKey)+'</b></p>'+
+    '<p class="hint" style="margin-top:8px">'+esc(u.storageNote)+'</p>'+
+    '<div class="row" style="margin-top:14px"><button class="btn ghost" id="exportBtn">'+esc(u.showBackup)+'</button>'+
+    '<button class="btn ghost" id="importBtn">'+esc(u.restoreBackup)+'</button></div>'+
+    '<div class="row" style="margin-top:10px"><button class="btn danger" id="resetAll">'+esc(u.resetAll)+'</button></div></div>';
+}
+
+function render(){
+  const c = compute();
+  renderChrome();
+  renderReadout(c); renderTiles(c); renderStrip(c); renderBack(c);
+  renderNext(c); renderNudge(c); renderJourney(c); renderNutrition(); renderCaveats(); renderYou(c);
+  ["today","journey","nutrition","caveats","you"].forEach(v=> $("#view-"+v).hidden = (v !== currentView));
+}
+function tick(){ const c = compute(); renderReadout(c); renderTiles(c); }
+
+/* ══════════════════════════════════════════════════════════════════════
+   SHEETS
+   ══════════════════════════════════════════════════════════════════════ */
+
+function closeSheet(){ unitsPreview = null; $("#modal").innerHTML = ""; }
+function openSheet(title, body, after){
+  $("#modal").innerHTML = '<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true" '+
+    'aria-label="'+esc(title)+'"><div class="sheet-h"><h3>'+esc(title)+'</h3>'+
+    '<button class="x" data-close aria-label="'+esc(T.ui.close)+'">✕</button></div>'+body+'</div></div>';
+  if(after) after();
+}
+
+function openSource(id){
+  const q = T.sources[id], u = T.ui; if(!q) return;
+  openSheet(q.h, '<dl class="kv">'+
+    '<dt>'+esc(u.sValue)+'</dt><dd>'+esc(q.value)+'</dd>'+
+    '<dt>'+esc(u.sSource)+'</dt><dd>'+esc(q.origin)+'</dd>'+
+    '<dt>'+esc(u.sMethod)+'</dt><dd>'+esc(q.method)+'</dd>'+
+    '<dt>'+esc(u.sLimit)+'</dt><dd>'+esc(q.limit)+'</dd></dl>'+
+    '<div class="formula">'+esc(q.formula)+'</div>');
+}
+
+function openLog(day){
+  const u = T.ui, d = day || iso(new Date());
+  const existing = S.entries[d];
+  const when = d === iso(new Date()) ? u.logToday : u.logOn(dfmt().format(new Date(midnight(d))));
+  openSheet(u.logTitle(when),
+    '<div class="log-grid">'+ u.logTypes.map(x=>
+      '<button class="chip" data-log="'+x[0]+'" aria-pressed="'+(!!existing && existing.typ===x[0])+'">'+esc(x[1])+'</button>').join("")+'</div>'+
+    '<p class="hint" style="margin-top:16px">'+esc(u.logHint)+'</p>'+
+    (existing ? '<div class="row" style="margin-top:12px"><button class="btn ghost" data-log="">'+esc(u.logDelete)+'</button></div>' : ''),
+    ()=>{
+      document.querySelectorAll("[data-log]").forEach(b=> b.onclick = ()=>{
+        const v = b.dataset.log;
+        if(v === ""){ delete S.entries[d]; closeSheet(); commit(); return; }
+        if(v === "meat" || v === "fish"){ openLogAmount(d, v); return; }
+        S.entries[d] = {typ:v}; closeSheet(); commit();
+      });
+    });
+}
+
+function openLogAmount(d, typ){
+  const u = T.ui, def = Math.round(K.portionG * U().small.f);
+  openSheet(typ === "fish" ? u.amtFish : u.amtMeat,
+    '<p class="ob-p">'+esc(u.amtIntro)+'</p>'+
+    (typ === "meat" ? '<div class="field"><label for="lArt">'+esc(u.amtWhich)+'</label><select id="lArt">'+
+      ["beef","pork","poultry"].map(a=>'<option value="'+a+'">'+esc(u.meatNames[a])+'</option>').join("")+
+      '</select></div>' : '')+
+    '<div class="field"><label for="lG">'+esc(u.amtHow)+' ('+esc(U().small.u)+')</label>'+
+    '<div class="hint">'+esc(u.amtHint(small(150)))+'</div>'+
+    '<input type="number" id="lG" value="'+def+'" min="1" step="1"></div>'+
+    '<div class="field"><label for="lNote">'+esc(u.amtNote)+'</label>'+
+    '<input type="text" id="lNote" placeholder="'+esc(u.amtNotePh)+'"></div>'+
+    '<div class="row" style="margin-top:20px"><button class="btn wide" id="lSave">'+esc(u.amtSave)+'</button></div>',
+    ()=>{ $("#lSave").onclick = ()=>{
+        setFloor();
+        const shown = Math.max(1, Number($("#lG").value) || def);
+        S.entries[d] = { typ, art: typ === "meat" ? $("#lArt").value : "fish",
+          g: shown / U().small.f, note: $("#lNote").value.trim() };
+        closeSheet(); commit();
+      }; });
+}
+
+function openSetup(){
+  const u = T.ui, prev = S.demo ? null : S;
+  let draft = { start: prev ? prev.start : iso(new Date()),
+    country: prev ? prev.country : S.country, level: "average",
+    units: prev ? prev.units : S.units, unitsTouched: !!prev,
+    w: Object.assign({}, prev ? prev.w : COUNTRIES[S.country].w),
+    mix: Object.assign({}, prev ? prev.mix : MIX_DEFAULT),
+    focus: prev ? prev.focus : "animals" };
+  let step = 0; const total = 4;
+
+  function draw(){
+    unitsPreview = draft.units;
+    const bar = '<div class="steps">'+Array.from({length:total},(_,i)=>'<i class="'+(i<=step?"on":"")+'"></i>').join("")+'</div>';
+    let b = "";
+    if(step===0) b = '<div class="ob-h">'+esc(u.s0h)+'</div><p class="ob-p">'+esc(u.s0p)+'</p>'+
+      '<div class="field"><label for="oD">'+esc(u.s0l)+'</label>'+
+      '<input type="date" id="oD" value="'+draft.start+'" max="'+iso(new Date())+'"></div>';
+    if(step===1){
+      const tot = Object.values(draft.w).reduce((x,y)=>x+y,0);
+      b = '<div class="ob-h">'+esc(u.s1h)+'</div><p class="ob-p">'+esc(u.s1p)+'</p>'+
+      '<div class="chips" style="margin-top:14px">'+Object.keys(COUNTRIES).map(k=>
+        '<button class="chip" data-country="'+k+'" aria-pressed="'+(draft.country===k)+'">'+esc(u.countries[k])+'</button>').join("")+'</div>'+
+      '<div class="chips" style="margin-top:8px">'+
+        [["metric",u.unitMetric],["imperial",u.unitImperial]].map(x=>
+        '<button class="chip" data-setunits="'+x[0]+'" aria-pressed="'+(draft.units===x[0])+'">'+esc(x[1])+'</button>').join("")+'</div>'+
+      '<div class="chips" style="margin-top:8px">'+Object.keys(LEVELS).map(k=>
+        '<button class="chip" data-level="'+k+'" aria-pressed="'+(draft.level===k)+'">'+esc(u.levels[k])+'</button>').join("")+'</div>'+
+      Object.keys(MEAT).map(a=>'<div class="slider-row"><span class="nm">'+esc(u.meatNames[a])+'</span>'+
+        '<input type="range" data-w="'+a+'" min="0" max="1600" step="10" value="'+(draft.w[a]||0)+'">'+
+        '<span class="amt" data-amt="'+a+'">'+small(draft.w[a]||0)+'</span></div>').join("")+
+      '<p class="hint" style="margin-top:14px">'+u.s1total(mass(tot/1000))+'</p>';
+    }
+    if(step===2){
+      const mv = mixValues(draft.mix);
+      b = '<div class="ob-h">'+esc(u.s2h)+'</div><p class="ob-p">'+esc(u.s2p)+'</p>'+
+      Object.keys(SUBS).map(k=>{
+        const share = (mv.shares.find(s=>s.k===k)||{}).p || 0;
+        return '<div class="mix-row"><div class="top"><span'+(share?'':' class="off"')+'>'+esc(u.subNames[k])+'</span>'+
+        '<b data-mixp="'+k+'">'+(share?share+"%":"–")+'</b></div>'+
+        '<input type="range" data-mix="'+k+'" min="0" max="100" step="5" value="'+(draft.mix[k]||0)+'" '+
+        'aria-label="'+esc(u.s2aria(u.subNames[k]))+'"></div>';
+      }).join("")+'<p class="hint" data-mixinfo style="margin-top:16px"></p>';
+    }
+    if(step===3) b = '<div class="ob-h">'+esc(u.s3h)+'</div><p class="ob-p">'+esc(u.s3p)+'</p>'+
+      '<div class="chips" style="margin-top:14px;flex-direction:column">'+
+      ["animals","co2","water","money"].map(id=>
+        '<button class="chip" data-focus="'+id+'" aria-pressed="'+(draft.focus===id)+'" style="width:100%">'+
+        esc(u.focusNames[id])+'</button>').join("")+
+      '</div><p class="hint" style="margin-top:16px">'+esc(u.s3foot)+'</p>';
+    const nav = '<div class="row" style="margin-top:22px;gap:8px">'+
+      (step>0?'<button class="btn ghost" data-back>'+esc(u.back)+'</button>':'')+
+      '<button class="btn" data-next style="flex:1">'+esc(step===total-1?u.start:u.next)+'</button></div>';
+    openSheet(u.setTitle, bar+b+nav, wire);
+  }
+
+  function applyPreset(){
+    const base = COUNTRIES[draft.country].w, f = LEVELS[draft.level];
+    draft.w = {}; for(const a in base) draft.w[a] = Math.round(base[a]*f/10)*10;
+  }
+
+  function wire(){
+    const oD = $("#oD"); if(oD) oD.onchange = ()=>{ if(oD.value) draft.start = oD.value; };
+    document.querySelectorAll("[data-country]").forEach(b=> b.onclick = ()=>{
+      draft.country = b.dataset.country;
+      if(!draft.unitsTouched) draft.units = COUNTRIES[draft.country].units;
+      applyPreset(); draw(); });
+    document.querySelectorAll("[data-setunits]").forEach(b=> b.onclick = ()=>{
+      draft.units = b.dataset.setunits; draft.unitsTouched = true; draw(); });
+    document.querySelectorAll("[data-level]").forEach(b=> b.onclick = ()=>{
+      draft.level = b.dataset.level; applyPreset(); draw(); });
+    document.querySelectorAll("[data-w]").forEach(r=> r.oninput = ()=>{
+      draft.w[r.dataset.w] = Number(r.value);
+      document.querySelector('[data-amt="'+r.dataset.w+'"]').textContent = small(draft.w[r.dataset.w]);
+      const t = document.querySelector("[data-total]");
+      if(t) t.textContent = mass(Object.values(draft.w).reduce((x,y)=>x+y,0)/1000);
+    });
+    document.querySelectorAll("[data-focus]").forEach(b=> b.onclick = ()=>{
+      draft.focus = b.dataset.focus;
+      document.querySelectorAll("[data-focus]").forEach(x=> x.setAttribute("aria-pressed", x===b));
+    });
+    function mixInfo(){
+      const mv = mixValues(draft.mix);
+      document.querySelectorAll("[data-mixp]").forEach(el=>{
+        const a = (mv.shares.find(x=>x.k===el.dataset.mixp)||{}).p || 0;
+        el.textContent = a ? a+"%" : "–";
+        const nm = el.parentElement.firstElementChild;
+        if(nm) nm.className = a ? "" : "off";
+      });
+      const info = document.querySelector("[data-mixinfo]");
+      if(info) info.innerHTML = mv.shares.length
+        ? u.s2info(nf(1).format(mv.co2), cur()+nf(2).format(mv.price)) : esc(u.s2none);
+    }
+    document.querySelectorAll("[data-mix]").forEach(r=> r.oninput = ()=>{
+      draft.mix[r.dataset.mix] = Number(r.value); mixInfo(); });
+    if(document.querySelector("[data-mixinfo]")) mixInfo();
+    const back = document.querySelector("[data-back]"); if(back) back.onclick = ()=>{ step--; draw(); };
+    document.querySelector("[data-next]").onclick = ()=>{
+      if(step < total-1){ step++; draw(); return; }
+      if(S.demo){ S.entries = {}; S.floor = {}; }
+      S.start = draft.start; S.country = draft.country; S.units = draft.units;
+      S.w = draft.w; S.mix = draft.mix; S.focus = draft.focus;
+      closeSheet(); commit();
+    };
+  }
+  draw();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   EVENTS
+   ══════════════════════════════════════════════════════════════════════ */
+
+document.addEventListener("click", e=>{
+  const u = T.ui;
+  const tab = e.target.closest("[data-view]");
+  if(tab){
+    currentView = tab.dataset.view;
+    document.querySelectorAll("[data-view]").forEach(b=> b.setAttribute("aria-selected", b.dataset.view===currentView));
+    ["today","journey","nutrition","caveats","you"].forEach(v=> $("#view-"+v).hidden = (v !== currentView));
+    window.scrollTo({top:0, behavior:"instant"});
+    return;
+  }
+  if(e.target.closest("[data-close]") || e.target.matches("[data-scrim]")){ closeSheet(); return; }
+  const w = e.target.closest(".why"); if(w){ openSource(w.dataset.src); return; }
+  const dot = e.target.closest(".dot[data-day]"); if(dot){ openLog(dot.dataset.day); return; }
+  if(e.target.closest("#logBtn") || e.target.closest("#logBtn2")){
+    if(S.demo){ openSetup(); } else { openLog(); } return;
+  }
+  if(e.target.closest("#startSetup") || e.target.closest("#editAll")){ openSetup(); return; }
+  const lg = e.target.closest("[data-lang]");
+  if(lg){ S.lang = lg.dataset.lang; T = LOCALES[S.lang] || EN; commit(); return; }
+  const un = e.target.closest("[data-units]");
+  if(un){ S.units = un.dataset.units; commit(); return; }
+  if(e.target.closest("#resetPrices")){ S.prices = {meat:{}, subs:{}}; commit(); return; }
+  const th = e.target.closest("[data-theme-set]");
+  if(th){
+    const v = th.dataset.themeSet;
+    if(v === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", v);
+    try{ v === "auto" ? localStorage.removeItem(KEY+"-theme") : localStorage.setItem(KEY+"-theme", v); }catch(err){}
+    render(); return;
+  }
+  if(e.target.closest("#exportBtn")){
+    openSheet(u.backupH, '<p class="ob-p">'+esc(u.backupP)+'</p>'+
+      '<div class="field"><textarea id="expTa" readonly>'+esc(JSON.stringify(S))+'</textarea></div>',
+      ()=>{ const t = $("#expTa"); t.focus(); t.select(); }); return;
+  }
+  if(e.target.closest("#importBtn")){
+    openSheet(u.restoreH, '<p class="ob-p">'+esc(u.restoreP)+'</p>'+
+      '<div class="field"><textarea id="impTa" placeholder="{ … }"></textarea></div>'+
+      '<div class="row" style="margin-top:16px"><button class="btn wide" id="impGo">'+esc(u.restoreBtn)+'</button></div>'+
+      '<p class="hint" id="impMsg" style="margin-top:10px"></p>',
+      ()=>{ $("#impGo").onclick = ()=>{
+          try{ const o = JSON.parse($("#impTa").value);
+               if(!o || !o.start) throw new Error(T.ui.noStart);
+               S = normalize(o); T = LOCALES[S.lang] || EN; closeSheet(); commit();
+          }catch(err){ $("#impMsg").textContent = T.ui.restoreErr(err.message); }
+        }; }); return;
+  }
+  if(e.target.closest("#resetAll")){
+    openSheet(u.resetH, '<p class="ob-p">'+esc(u.resetP)+'</p>'+
+      '<div class="row" style="margin-top:20px;gap:8px"><button class="btn ghost" data-close style="flex:1">'+esc(u.cancel)+'</button>'+
+      '<button class="btn danger" id="reallyReset" style="flex:1">'+esc(u.del)+'</button></div>',
+      ()=>{ $("#reallyReset").onclick = ()=>{
+          try{ localStorage.removeItem(KEY); }catch(err){}
+          if(dbRef) dbRef.delete().catch(()=>{});
+          S = demoState(); T = LOCALES[S.lang] || EN; closeSheet(); render();
+        }; });
+  }
+});
+
+document.addEventListener("change", e=>{
+  const p = e.target.closest("[data-price]");
+  if(!p) return;
+  const parts = p.dataset.price.split(":"), group = parts[0], key = parts[1];
+  const shown = Number(p.value);
+  if(isNaN(shown) || shown < 0){ render(); return; }
+  if(!S.prices) S.prices = {meat:{}, subs:{}};
+  S.prices[group][key] = shown * U().mass.f;
+  commit();
+});
+document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeSheet(); });
+
+render();
+setInterval(tick, 1000);
+</script>
